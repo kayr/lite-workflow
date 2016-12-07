@@ -1,0 +1,17 @@
+-Receive workitem from yawl
+-save workitem
+
+
+-When mobile requests workitem.Look for the spec that the workitem matches.
+-Send the available workitem.
+-Look for any spec worklet that could be on the server and send it to the mobile to.
+
+
+-Mobile.
+----------------------------------
+-Workitems should have command to complete. And should have status complete.
+-
+
+-Spec
+--------------------------------
+Specs should have a clone function.
