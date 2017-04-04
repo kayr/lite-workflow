@@ -3,15 +3,13 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+group = 'com.omnitech'
 
 sourceCompatibility = 1.7
-version = '1.0-SNANPSHOT'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Tryout', 'Implementation-Version': version
-    }
-}
+
+
 
 repositories {
     mavenCentral()
