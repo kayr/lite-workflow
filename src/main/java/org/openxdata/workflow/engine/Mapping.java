@@ -3,7 +3,7 @@ package org.openxdata.workflow.engine;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import org.openxdata.db.util.Persistent;
+import org.openxdata.workflow.engine.persistent.Persistent;
 
 /**
  *

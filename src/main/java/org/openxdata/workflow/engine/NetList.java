@@ -4,8 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
-import org.openxdata.db.util.Persistent;
-import org.openxdata.db.util.PersistentHelper;
+import org.openxdata.workflow.engine.persistent.Persistent;
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -27,7 +27,7 @@ public class NetList implements Persistent {
 	}
 
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
-		nets = PersistentHelper.read(dis, new Net().getClass());
+		nets = PersistentHelper.read(dis, Net.class);
 	}
 
 	public void setNets(Vector<Net> nets) {

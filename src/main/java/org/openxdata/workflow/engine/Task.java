@@ -4,13 +4,17 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
-import org.openxdata.db.util.PersistentHelper;
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
  * @author kay
  */
 public class Task extends Element {
+
+	public static enum STATE{
+		COMPLETE,DISABLED,ENABLED
+	}
 
 	public static final byte COMPLETE = 2;
 	public static final byte DISABLED = 3;
@@ -144,6 +148,7 @@ public class Task extends Element {
 		super.read(dis);
 		join.read(dis);
 		split.read(dis);
+
 		name = dis.readUTF();
 		status = dis.readByte();
 		studyId = PersistentHelper.readInteger(dis);

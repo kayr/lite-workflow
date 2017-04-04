@@ -1,0 +1,3 @@
+We should probably have an An explicit end task
+
+Tasks should have only a a few states.. running and disabled. That will enable us have a rewinding workflow.

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.openxdata.db.util.PersistentHelper;
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -171,8 +171,8 @@ public class Net extends Element {
 	@Override
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		super.read(dis);
-		outFlows = PersistentHelper.read(dis, new Flow().getClass());
-		netTasks = Util.readFromStrem(dis, new Task().getClass());
+		outFlows = PersistentHelper.read(dis, Flow.class);
+		netTasks = Util.readFromStrem(dis,  Task.class);
 		status = dis.readByte();
 		extendAttributes = PersistentHelper.read(dis);
 

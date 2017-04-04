@@ -1,5 +1,7 @@
 .idea
 .gradle
 *.iml
-target
+target/
 .svn
+build/
+.gradle/

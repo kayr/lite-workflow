@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.openxdata.db.util.Serializer;
 
 /**
  *
@@ -88,7 +87,7 @@ public class Util {
 	}
 
 	public static DataInputStream getInputStream(Element elem) throws IOException {
-		byte[] bytes = Serializer.serialize(elem);
+		byte[] bytes = org.openxdata.workflow.engine.persistent.Serializer.serialize(elem);
 		DataInputStream din = new DataInputStream(new ByteArrayInputStream(bytes));
 		return din;
 	}

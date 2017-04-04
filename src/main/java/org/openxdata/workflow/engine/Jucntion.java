@@ -4,8 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
-import org.openxdata.db.util.Persistent;
-import org.openxdata.db.util.PersistentHelper;
+import org.openxdata.workflow.engine.persistent.Persistent;
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -97,6 +97,6 @@ public abstract class Jucntion implements Persistent {
 
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		type = dis.readByte();
-		flows = PersistentHelper.read(dis, new Flow().getClass());
+		flows = PersistentHelper.read(dis, Flow.class);
 	}
 }
