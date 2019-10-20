@@ -12,21 +12,21 @@ import java.io.IOException;
  */
 public class Variable implements IdPersistent {
 
-	public enum TYPE {
+	public enum FLOW {
 		INPUT, OUTPUT, IO
 	}
 
 	private String name;
 	private String value;
-	private TYPE flow;
+	private FLOW flow;
 
 	public Variable() {
 	}
 
-	public Variable(String name, String value, TYPE type) {
+	public Variable(String name, String value, FLOW flow) {
 		this.name = name;
 		this.value = value;
-		this.flow = type;
+		this.flow = flow;
 	}
 
 	public String getName() {
@@ -37,12 +37,12 @@ public class Variable implements IdPersistent {
 		this.name = name;
 	}
 
-	public TYPE getFlow() {
+	public FLOW getFlow() {
 		return flow;
 	}
 
-	public void setFlow(TYPE type) {
-		this.flow = type;
+	public void setFlow(FLOW FLOW) {
+		this.flow = FLOW;
 	}
 
 	public String getValue() {
@@ -54,15 +54,15 @@ public class Variable implements IdPersistent {
 	}
 
 	public boolean isInput() {
-		return flow == TYPE.INPUT || isInputOutput();
+		return flow == FLOW.INPUT || isInputOutput();
 	}
 
 	public boolean isOutput() {
-		return flow == TYPE.OUTPUT || isInputOutput();
+		return flow == FLOW.OUTPUT || isInputOutput();
 	}
 
 	public boolean isInputOutput() {
-		return flow == TYPE.IO;
+		return flow == FLOW.IO;
 	}
 
 	public void copyToNetVariable() {
@@ -89,6 +89,6 @@ public class Variable implements IdPersistent {
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		name = dis.readUTF();
 		value = PersistentHelper.readUTF(dis);
-		flow = TYPE.valueOf(dis.readUTF());
+		flow = FLOW.valueOf(dis.readUTF());
 	}
 }

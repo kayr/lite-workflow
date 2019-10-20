@@ -3,7 +3,6 @@ package org.openxdata.workflow.engine;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.EnumSet;
 
 import org.openxdata.workflow.engine.persistent.Persistent;
 
@@ -17,9 +16,9 @@ public class Mapping implements Persistent {
 	private String netVariable;
 	private String taskVarId;
 	private String taskID;
-	private Variable.TYPE flow;
+	private Variable.FLOW flow;
 
-	public Mapping(String netVariable, String taskVariable, String taskID, Variable.TYPE input) {
+	public Mapping(String netVariable, String taskVariable, String taskID, Variable.FLOW input) {
 		this.netVariable = netVariable;
 		this.taskVarId = taskVariable;
 		this.taskID = taskID;
@@ -56,7 +55,7 @@ public class Mapping implements Persistent {
 		return rootNet;
 	}
 
-	public Variable.TYPE getFlow() {
+	public Variable.FLOW getFlow() {
 		return flow;
 	}
 
@@ -75,6 +74,6 @@ public class Mapping implements Persistent {
 		netVariable = dis.readUTF();
 		taskID = dis.readUTF();
 		taskVarId = dis.readUTF();
-		flow = Variable.TYPE.valueOf(dis.readUTF());
+		flow = Variable.FLOW.valueOf(dis.readUTF());
 	}
 }

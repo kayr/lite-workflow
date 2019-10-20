@@ -9,22 +9,22 @@ public class ServiceCycle {
 		Net net = new Net();
 
 		Task smeOne = (Task) net.addFlow().forFlowingIntoNewTask("First SMS", "first_sms")
-								.withParameter("cowname", Variable.TYPE.INPUT).withParameter("cowid", Variable.TYPE.INPUT);
+								.withParameter("cowname", Variable.FLOW.INPUT).withParameter("cowid", Variable.FLOW.INPUT);
 
 		Task sms2 = (Task) smeOne.addOutFlow().forFlowingIntoNewTask("Second SMS", "secon_sms")
-								 .withParameter("cowname", Variable.TYPE.INPUT).withParameter("cowid", Variable.TYPE.INPUT);
+								 .withParameter("cowname", Variable.FLOW.INPUT).withParameter("cowid", Variable.FLOW.INPUT);
 
 		Task sms3 = (Task) sms2.addOutFlow().forFlowingIntoNewTask("Third SMS", "third_sms")
-							   .withParameter("cowname", Variable.TYPE.INPUT).withParameter("cowid", Variable.TYPE.INPUT);
+							   .withParameter("cowname", Variable.FLOW.INPUT).withParameter("cowid", Variable.FLOW.INPUT);
 
 		Task confirmPregnancySMS = (Task) sms3.addOutFlow()
 											  .forFlowingIntoNewTask("Confirm Pregnancy SMS", "confirm_preg_sms")
-											  .withParameter("cowname", Variable.TYPE.INPUT).withParameter("cowid", Variable.TYPE.INPUT)
-											  .withParameter("is_pregnant", Variable.TYPE.OUTPUT);
+											  .withParameter("cowname", Variable.FLOW.INPUT).withParameter("cowid", Variable.FLOW.INPUT)
+											  .withParameter("is_pregnant", Variable.FLOW.OUTPUT);
 
 		Task dryingSMS = (Task) confirmPregnancySMS.addOutFlow().withEqualCondititon("is_pregnant", "yes")
-				.forFlowingIntoNewTask("DRYING SMS", "drying_sms").withParameter("cowname", Variable.TYPE.INPUT)
-				.withParameter("cowid", Variable.TYPE.INPUT);
+				.forFlowingIntoNewTask("DRYING SMS", "drying_sms").withParameter("cowname", Variable.FLOW.INPUT)
+				.withParameter("cowid", Variable.FLOW.INPUT);
 
 		dryingSMS.addOutFlow().withEqualCondititon("is_pregnant", "no").forFlowingIntoTask(smeOne);
 

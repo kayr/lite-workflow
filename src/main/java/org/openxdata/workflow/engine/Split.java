@@ -21,7 +21,7 @@ public class Split extends Jucntion {
 				tasks.add(flow.getNextElement());
 				if (isXOR()) {
 					//TODO Add support for for XOR splits.
-					//The tasks in the XOR split are also supposed to be diasabled
+					//The tasks in the XOR split are also supposed to be disabled
 					break;
 				}
 			} else {

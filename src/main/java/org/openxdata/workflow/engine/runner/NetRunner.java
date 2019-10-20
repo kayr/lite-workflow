@@ -16,7 +16,7 @@ import java.util.Map;
 public class NetRunner extends org.openxdata.workflow.engine.persistent.AbstractRecord {
 
     private Map<String, String> netVariables = new HashMap<String, String>();
-    private List<Workitem> runningWorkitems = new ArrayList<Workitem>();
+    private List<WorkItem> runningWorkItems = new ArrayList<WorkItem>();
     private String caseID;
     private String specID;
 
@@ -52,24 +52,24 @@ public class NetRunner extends org.openxdata.workflow.engine.persistent.Abstract
         this.specID = specID;
     }
 
-    public List<Workitem> getWorkitems() {
-        return runningWorkitems;
+    public List<WorkItem> getWorkitems() {
+        return runningWorkItems;
     }
 
-    public void setWorkitems(List<Workitem> workitems) {
-        this.runningWorkitems = workitems;
+    public void setWorkitems(List<WorkItem> workItems) {
+        this.runningWorkItems = workItems;
     }
 
     public void write(DataOutputStream dos) throws IOException {
         PersistentHelper.write(netVariables, dos);
-        PersistentHelper.write(runningWorkitems, dos);
+        PersistentHelper.write(runningWorkItems, dos);
         dos.writeUTF(caseID);
         dos.writeUTF(specID);
     }
 
     public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
         netVariables = PersistentHelper.read(dis);
-        runningWorkitems = PersistentHelper.read(dis, Workitem.class);
+        runningWorkItems = PersistentHelper.read(dis, WorkItem.class);
         caseID = dis.readUTF();
         specID = dis.readUTF();
     }

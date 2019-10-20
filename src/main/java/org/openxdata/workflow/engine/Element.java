@@ -34,7 +34,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
         if (containInputMappingForVariable(taskVarName)) {
             throw new WfException("Duplicate Mapping for variable: " + getId() + "." + taskVarName);
         }
-        Mapping mapping = new Mapping(netVariableName, taskVarName, id, Variable.TYPE.INPUT);
+        Mapping mapping = new Mapping(netVariableName, taskVarName, id, Variable.FLOW.INPUT);
         mapping.setRootNet(rootNet);
         mappings.add(mapping);
         return this;
@@ -44,7 +44,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     public boolean containInputMappingForVariable(String varName) {
         for (int i = 0; i < mappings.size(); i++) {
             Mapping mapping = mappings.get(i);
-            if (mapping.getFlow() == Variable.TYPE.INPUT && mapping.getTaskVarId().equals(varName)) {
+            if (mapping.getFlow() == Variable.FLOW.INPUT && mapping.getTaskVarId().equals(varName)) {
                 return true;
             }
         }
@@ -65,7 +65,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
 
     public Element withOutputMapping(String taskVarName, String netVarName) {
         validateNetAndTaskNames(taskVarName, netVarName);
-        Mapping mapping = new Mapping(netVarName, taskVarName, id, Variable.TYPE.OUTPUT);
+        Mapping mapping = new Mapping(netVarName, taskVarName, id, Variable.FLOW.OUTPUT);
         mapping.setRootNet(rootNet);
         mappings.add(mapping);
         return this;
@@ -74,7 +74,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     public void processInputMappings() {
         for (int i = 0; i < mappings.size(); i++) {
             Mapping mapping = mappings.get(i);
-            if (mapping.getFlow() == Variable.TYPE.INPUT) {
+            if (mapping.getFlow() == Variable.FLOW.INPUT) {
                 mapping.performInputCopy();
             }
         }
@@ -83,18 +83,18 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     public void processOutputMappings() {
         for (int i = 0; i < mappings.size(); i++) {
             Mapping mapping = mappings.get(i);
-            if (mapping.getFlow() == Variable.TYPE.OUTPUT) {
+            if (mapping.getFlow() == Variable.FLOW.OUTPUT) {
                 mapping.performOutputCopy();
             }
         }
     }
 
-    public Element withParameter(String name, Variable.TYPE flow) {
+    public Element withParameter(String name, Variable.FLOW flow) {
         withParameter(name, flow, true);
         return this;
     }
 
-    public Element withParameter(String name, Variable.TYPE flow, boolean directTransfer) {
+    public Element withParameter(String name, Variable.FLOW flow, boolean directTransfer) {
         Variable variable = new Variable(name, null, flow);
         variablesTable.put(name, variable);
         if (!directTransfer) {
@@ -112,7 +112,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     }
 
     private Element forDirectTransfer(Variable variable) {
-        Variable.TYPE direction = variable.getFlow();
+        Variable.FLOW direction = variable.getFlow();
         String variableName = variable.getName();
 
         switch (direction) {
@@ -131,12 +131,12 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     }
 
     protected void addOutputMapping(String variableName) {
-        rootNet.withParameter(variableName, Variable.TYPE.OUTPUT, false);
+        rootNet.withParameter(variableName, Variable.FLOW.OUTPUT, false);
         withOutputMapping(variableName, variableName);
     }
 
     protected void addInputMapping(String variableName) {
-        rootNet.withParameter(variableName, Variable.TYPE.INPUT, false);
+        rootNet.withParameter(variableName, Variable.FLOW.INPUT, false);
         withInputMapping(variableName, variableName);
     }
 

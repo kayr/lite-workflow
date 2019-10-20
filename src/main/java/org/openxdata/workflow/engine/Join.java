@@ -12,8 +12,7 @@ public class Join extends Jucntion {
 		//TODO:Support for different types of join ie. XOR, OR, AND
 		if (isAND()) {
 			List<Flow> inFlows = getFlows();
-			for (int i = 0; i < inFlows.size(); i++) {
-				Flow flow = inFlows.get(i);
+			for (Flow flow : inFlows) {
 				if (!flow.getPreviousElement().isComplete()) {
 					return false;
 				}

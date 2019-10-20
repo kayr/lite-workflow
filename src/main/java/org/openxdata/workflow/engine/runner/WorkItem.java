@@ -7,14 +7,14 @@ import java.util.Map;
  *
  * @author kay
  */
-public class Workitem {
+public class WorkItem {
 
-	private Map<String, String> paramaters = new HashMap<String, String>(0);
+	private Map<String, String> parameters = new HashMap<String, String>(0);
 	private String caseID;
 	private String taskID;
 	private boolean submitted;
 
-	public Workitem(String caseID, String taskID) {
+	public WorkItem(String caseID, String taskID) {
 		this.caseID = caseID;
 		this.taskID = taskID;
 	}
@@ -27,12 +27,12 @@ public class Workitem {
 		this.caseID = caseID;
 	}
 
-	public Map<String, String> getParamaters() {
-		return paramaters;
+	public Map<String, String> getParameters() {
+		return parameters;
 	}
 
-	public void setParamaters(Map<String, String> paramaters) {
-		this.paramaters = paramaters;
+	public void setParameters(Map<String, String> parameters) {
+		this.parameters = parameters;
 	}
 
 	public String getTaskID() {
