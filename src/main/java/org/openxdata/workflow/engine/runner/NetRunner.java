@@ -1,22 +1,22 @@
 package org.openxdata.workflow.engine.runner;
 
-import org.openxdata.workflow.engine.Net;
 import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author kay
  */
 public class NetRunner extends org.openxdata.workflow.engine.persistent.AbstractRecord {
 
-    private Net net;
-    private Hashtable<String, String> netVariables = new Hashtable<String, String>();
-    private Vector<Workitem> runningWorkitems = new Vector<Workitem>();
+    private Map<String, String> netVariables = new HashMap<String, String>();
+    private List<Workitem> runningWorkitems = new ArrayList<Workitem>();
     private String caseID;
     private String specID;
 
@@ -36,11 +36,11 @@ public class NetRunner extends org.openxdata.workflow.engine.persistent.Abstract
         this.caseID = caseID;
     }
 
-    public Hashtable<String, String> getNetVariables() {
+    public Map<String, String> getNetVariables() {
         return netVariables;
     }
 
-    public void setNetVariables(Hashtable<String, String> netVariables) {
+    public void setNetVariables(Map<String, String> netVariables) {
         this.netVariables = netVariables;
     }
 
@@ -52,11 +52,11 @@ public class NetRunner extends org.openxdata.workflow.engine.persistent.Abstract
         this.specID = specID;
     }
 
-    public Vector<Workitem> getWorkitems() {
+    public List<Workitem> getWorkitems() {
         return runningWorkitems;
     }
 
-    public void setWorkitems(Vector<Workitem> workitems) {
+    public void setWorkitems(List<Workitem> workitems) {
         this.runningWorkitems = workitems;
     }
 
@@ -69,7 +69,7 @@ public class NetRunner extends org.openxdata.workflow.engine.persistent.Abstract
 
     public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
         netVariables = PersistentHelper.read(dis);
-        //runningWorkitems = PersistentHelper.read(dis, Workitem.class);
+        runningWorkitems = PersistentHelper.read(dis, Workitem.class);
         caseID = dis.readUTF();
         specID = dis.readUTF();
     }

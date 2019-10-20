@@ -3,11 +3,7 @@ package org.openxdata.workflow.engine.persistent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
+import java.util.*;
 
 
 /**
@@ -105,7 +101,7 @@ public class PersistentHelper {
 	 */
 	public static Integer readInteger(DataInputStream dis) throws IOException {
 		if(dis.readBoolean())
-			return new Integer(dis.readInt());
+			return dis.readInt();
 		return null;
 	}
 	
@@ -131,22 +127,22 @@ public class PersistentHelper {
 	 */
 	public static Boolean readBoolean(DataInputStream dis) throws IOException {
 		if(dis.readBoolean())
-			return new Boolean(dis.readBoolean());
+			return dis.readBoolean();
 		return null;
 	}
 	
 	/**
 	 * Writes a small vector (byte size) of Persistent objects to a stream.
-	 * 
-	 * @param persistentVector - the vector of persistent objects.
+	 *
+	 * @param persistentList - the vector of persistent objects.
 	 * @param dos - the stream to write to.
 	 * @throws IOException - thrown when a problem occurs during the writing to stream.
 	 */
-	public static void write(Vector persistentVector, DataOutputStream dos) throws IOException {	
-		if(persistentVector != null){
-			dos.writeByte(persistentVector.size());
-			for(int i=0; i<persistentVector.size(); i++ ){
-				((Persistent)persistentVector.elementAt(i)).write(dos);
+	public static void write(List persistentList, DataOutputStream dos) throws IOException {
+		if (persistentList != null) {
+			dos.writeByte(persistentList.size());
+			for (int i = 0; i < persistentList.size(); i++) {
+				((Persistent) persistentList.get(i)).write(dos);
 			}
 		}
 		else
@@ -155,38 +151,38 @@ public class PersistentHelper {
 	
 	/**
 	 * Writes a big vector (of int size) of persistent objects from a stream.
-	 * 
-	 * @param persistentVector
+	 *
+	 * @param persistentList
 	 * @param dos
 	 * @throws IOException
 	 */
-	public static void writeBig(Vector persistentVector, DataOutputStream dos) throws IOException {	
-		if(persistentVector != null){
-			dos.writeInt(persistentVector.size());
-			for(int i=0; i<persistentVector.size(); i++ ){
-				((Persistent)persistentVector.elementAt(i)).write(dos);
+	public static void writeBig(List persistentList, DataOutputStream dos) throws IOException {
+		if (persistentList != null) {
+			dos.writeInt(persistentList.size());
+			for (int i = 0; i < persistentList.size(); i++) {
+				((Persistent) persistentList.get(i)).write(dos);
 			}
 		}
 		else
 			dos.writeInt(0);
 	}
-	
-	public static void write(Vector persistentVector, DataOutputStream dos, int len) throws IOException {	
-		if(persistentVector != null){
-			dos.writeInt(persistentVector.size());
-			for(int i=0; i<persistentVector.size(); i++ ){
-				((Persistent)persistentVector.elementAt(i)).write(dos);
+
+	public static void write(List persistentList, DataOutputStream dos, int len) throws IOException {
+		if (persistentList != null) {
+			dos.writeInt(persistentList.size());
+			for (int i = 0; i < persistentList.size(); i++) {
+				((Persistent) persistentList.get(i)).write(dos);
 			}
 		}
 		else
 			dos.writeInt(0);
 	}
-	
-	public static void writeIntegers(Vector intVector, DataOutputStream dos) throws IOException {	
-		if(intVector != null){
-			dos.writeByte(intVector.size());
-			for(int i=0; i<intVector.size(); i++ )
-				dos.writeInt(((Integer)intVector.elementAt(i)).intValue());
+
+	public static void writeIntegers(List intList, DataOutputStream dos) throws IOException {
+		if (intList != null) {
+			dos.writeByte(intList.size());
+			for (int i = 0; i < intList.size(); i++)
+				dos.writeInt(((Integer) intList.get(i)).intValue());
 		}
 		else
 			dos.writeByte(0);
@@ -194,16 +190,16 @@ public class PersistentHelper {
 	
 	/**
 	 * Writes a list of bytes a stream.
-	 * 
-	 * @param byteVector - the Byte vector.
+	 *
+	 * @param byteList - the Byte vector.
 	 * @param dos  - the stream.
 	 * @throws IOException
 	 */
-	public static void writeBytes(Vector byteVector, DataOutputStream dos) throws IOException {	
-		if(byteVector != null){
-			dos.writeByte(byteVector.size());
-			for(int i=0; i<byteVector.size(); i++ )
-				dos.writeByte(((Byte)byteVector.elementAt(i)).byteValue());
+	public static void writeBytes(List byteList, DataOutputStream dos) throws IOException {
+		if (byteList != null) {
+			dos.writeByte(byteList.size());
+			for (int i = 0; i < byteList.size(); i++)
+				dos.writeByte(((Byte) byteList.get(i)).byteValue());
 		}
 		else
 			dos.writeByte(0);
@@ -214,27 +210,25 @@ public class PersistentHelper {
 	 * 
 	 * @param dis - the stream to read from.
 	 * @param cls - the class of the persistent objects contained in the vector.
-	 * @return - the Vector of persistent objets or null if none.
+	 * @return - the List of persistent objets or null if none.
 	 * @throws IOException - thrown when a problem occurs during the reading from stream.
 	 * @throws InstantiationException - thrown when a problem occurs during the peristent object creation.
 	 * @throws IllegalAccessException - thrown when a problem occurs when setting values of the persistent object.
 	 */
-	public static Vector read(DataInputStream dis, Class cls) throws IOException, InstantiationException,IllegalAccessException {
+	public static List read(DataInputStream dis, Class cls) throws IOException, InstantiationException, IllegalAccessException {
 		
 		byte len = dis.readByte();
 		
-		/*if(len == 0)
-			return null;*/
 
-		Vector persistentVector = new Vector(len);
+		List persistentList = new ArrayList(len);
 		
 		for(byte i=0; i<len; i++ ){
-			Object obj = (Persistent)cls.newInstance();
+			Object obj = cls.newInstance();
 			((Persistent)obj).read(dis);
-			persistentVector.addElement(obj);
+			persistentList.add(obj);
 		}
-		
-		return persistentVector;
+
+		return persistentList;
 	}
 	
 	/**
@@ -247,51 +241,46 @@ public class PersistentHelper {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public static Vector readBig(DataInputStream dis, Class cls) throws IOException, InstantiationException,IllegalAccessException {
+	public static List readBig(DataInputStream dis, Class cls) throws IOException, InstantiationException, IllegalAccessException {
 		
 		int len = dis.readInt();
-		/*if(len == 0)
-			return null;*/
 
-		Vector persistentVector = new Vector(len);
+		List persistentList = new ArrayList(len);
 		
 		for(int i=0; i<len; i++ ){
-			Object obj = (Persistent)cls.newInstance();
+			Object obj = cls.newInstance();
 			((Persistent)obj).read(dis);
-			persistentVector.addElement(obj);
+			persistentList.add(obj);
 		}
-		
-		return persistentVector;
-	}
-	
-	public static Vector read(DataInputStream dis, Class cls, int len) throws IOException, InstantiationException,IllegalAccessException {
-		
-		/*if(len == 0)
-			return null;*/
 
-		Vector persistentVector = new Vector(len);
+		return persistentList;
+	}
+
+	public static List read(DataInputStream dis, Class cls, int len) throws IOException, InstantiationException, IllegalAccessException {
+		
+
+		List persistentList = new ArrayList(len);
 		
 		for(int i=0; i<len; i++ ){
-			Object obj = (Persistent)cls.newInstance();
+			Object obj = cls.newInstance();
 			((Persistent)obj).read(dis);
-			persistentVector.addElement(obj);
+			persistentList.add(obj);
 		}
-		
-		return persistentVector;
+
+		return persistentList;
 	}
-	
-	public static Vector readIntegers(DataInputStream dis) throws IOException, InstantiationException,IllegalAccessException {
+
+	public static List readIntegers(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		
 		byte len = dis.readByte();
-		/*if(len == 0)
-			return null;*/
-		
-		Vector intVector = new Vector(len);
+
+
+		List intList = new ArrayList(len);
 		
 		for(byte i=0; i<len; i++ )
-			intVector.addElement(new Integer(dis.readInt()));
-		
-		return intVector;
+			intList.add(dis.readInt());
+
+		return intList;
 	}
 	
 	/**
@@ -303,40 +292,36 @@ public class PersistentHelper {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public static Vector readBytes(DataInputStream dis) throws IOException, InstantiationException,IllegalAccessException {
+	public static List readBytes(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		
 		byte len = dis.readByte();
-		/*if(len == 0)
-			return null;*/
-		
-		Vector byteVector = new Vector(len);
+
+		List byteList = new ArrayList(len);
 		
 		for(byte i=0; i<len; i++ )
-			byteVector.addElement(new Byte(dis.readByte()));
-		
-		return byteVector;
+			byteList.add(dis.readByte());
+
+		return byteList;
 	}
 	
 	/**
 	 * Write a hashtable of string keys and values to a stream.
-	 * 
-	 * @param stringHashtable - a hashtable of string keys and values.
+	 *
+	 * @param stringHashMap - a hashtable of string keys and values.
 	 * @param dos - that stream to write to.
 	 * @throws IOException - thrown when a problem occurs during the writing to stream.
 	 */
-	public static void write(Hashtable stringHashtable, DataOutputStream dos) throws IOException {	
-		if(stringHashtable != null){
-			dos.writeByte(stringHashtable.size());
-			Enumeration keys = stringHashtable.keys();
-			String key;
-			while(keys.hasMoreElements()){
-				key  = (String)keys.nextElement();
+	public static void write(Map stringHashMap, DataOutputStream dos) throws IOException {
+		if (stringHashMap != null) {
+			dos.writeByte(stringHashMap.size());
+			for (Object o : stringHashMap.keySet()) {
+				String key = (String) o;
 				dos.writeUTF(key);
-				dos.writeUTF((String)stringHashtable.get(key));
+				dos.writeUTF((String) stringHashMap.get(key));
 			}
-		}
-		else
+		} else {
 			dos.writeByte(0);
+		}
 	}
 	
 	/**
@@ -346,17 +331,17 @@ public class PersistentHelper {
 	 * @return - the hashtable of string keys and values or null if none.
 	 * @throws IOException - thrown when a problem occurs during the reading from stream.
 	*/
-	public static Hashtable read(DataInputStream dis) throws IOException {
+	public static HashMap read(DataInputStream dis) throws IOException {
 		
 		byte len = dis.readByte();
 		/*if(len == 0)
 			return null;*/
-		
-		Hashtable stringHashtable = new Hashtable();
+
+		HashMap stringHashMap = new HashMap();
 
 		for(byte i=0; i<len; i++ )
-			stringHashtable.put(dis.readUTF(), dis.readUTF());
-		
-		return stringHashtable;
+			stringHashMap.put(dis.readUTF(), dis.readUTF());
+
+		return stringHashMap;
 	}
 }

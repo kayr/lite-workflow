@@ -4,9 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -14,23 +13,11 @@ import java.util.Vector;
  */
 public class Util {
 
-	public static void writeToStream(DataOutputStream out, Hashtable<String, ? extends IdPersistent> table) throws IOException {
-
-//		
-//				if(persistentVector != null){
-//			dos.writeByte(persistentVector.size());
-//			for(int i=0; i<persistentVector.size(); i++ ){
-//				((Persistent)persistentVector.elementAt(i)).write(dos);
-//			}
-//		}
-//		else
-//			dos.writeByte(0);
+	public static void writeToStream(DataOutputStream out, Map<String, ? extends IdPersistent> table) throws IOException {
 
 		if (table != null) {
-			Enumeration<? extends IdPersistent> values = table.elements();
 			out.writeShort(table.size());
-			while (values.hasMoreElements()) {
-				IdPersistent idPersistent = values.nextElement();
+			for (IdPersistent idPersistent : table.values()) {
 				idPersistent.write(out);
 			}
 		} else {
@@ -38,24 +25,9 @@ public class Util {
 		}
 	}
 
-	public static <T extends IdPersistent> Hashtable<String, T> readFromStrem(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
-		Hashtable<String, T> table = new Hashtable<String, T>();
+	public static <T extends IdPersistent> HashMap<String, T> readFromStrem(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
+		HashMap<String, T> table = new HashMap<String, T>();
 		short len = din.readShort();
-		//		byte len = dis.readByte();
-		//
-		//		/*if(len == 0)
-		//			return null;*/
-		//
-		//		Vector persistentVector = new Vector(len);
-		//
-		//		for(byte i=0; i<len; i++ ){
-		//			Object obj = (Persistent)cls.newInstance();
-		//			((Persistent)obj).read(dis);
-		//			persistentVector.addElement(obj);
-		//		}
-		//
-		//		return persistentVector;
-
 
 		for (short i = 0; i < len; i++) {
 			T obj = (T) clazz.newInstance();
@@ -65,16 +37,6 @@ public class Util {
 
 		return table;
 
-	}
-
-	public static <T> Vector<T> toVector(Hashtable<? extends Object, T> table) {
-		Enumeration<T> elements = table.elements();
-		Vector<T> vcs = new Vector<T>(0);
-		while (elements.hasMoreElements()) {
-			T t = elements.nextElement();
-			vcs.addElement(t);
-		}
-		return vcs;
 	}
 
 	public static Net copyNet(Net net) throws IllegalAccessException, InstantiationException, IOException {
@@ -88,7 +50,6 @@ public class Util {
 
 	public static DataInputStream getInputStream(Element elem) throws IOException {
 		byte[] bytes = org.openxdata.workflow.engine.persistent.Serializer.serialize(elem);
-		DataInputStream din = new DataInputStream(new ByteArrayInputStream(bytes));
-		return din;
+		return new DataInputStream(new ByteArrayInputStream(bytes));
 	}
 }

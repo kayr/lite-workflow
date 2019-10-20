@@ -1,6 +1,7 @@
 package org.openxdata.workflow.engine;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -8,16 +9,16 @@ import java.util.Vector;
  */
 public class Split extends Jucntion {
 
-	public Vector<Task> getTasksInExec() {
+	public List<Task> getTasksInExec() {
 		if (isAND()) {
 			return getAllNextTasks();
 		}
-		Vector<Flow> outFlows = getFlows();
-		Vector<Task> tasks = new Vector<Task>(0);
+		List<Flow> outFlows = getFlows();
+		List<Task> tasks = new ArrayList<Task>(0);
 		for (int i = 0; i < outFlows.size(); i++) {
-			Flow flow = outFlows.elementAt(i);
+			Flow flow = outFlows.get(i);
 			if (flow.isFlowAllowed()) {
-				tasks.addElement(flow.getNextElement());
+				tasks.add(flow.getNextElement());
 				if (isXOR()) {
 					//TODO Add support for for XOR splits.
 					//The tasks in the XOR split are also supposed to be diasabled
@@ -29,8 +30,7 @@ public class Split extends Jucntion {
 		}
 
 		if (isXOR()) {//TODO Make tests for this
-			for (int i = 0; i < outFlows.size(); i++) {
-				Flow flow = outFlows.elementAt(i);
+			for (Flow flow : outFlows) {
 				if (!tasks.contains(flow.getNextElement())) {
 					flow.getNextElement().setStatus(Task.STATE.COMPLETE);
 				}

@@ -6,6 +6,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 /**
@@ -34,7 +36,7 @@ public class UtilTest extends TestCase {
 	 */
 	public void testReadFromStrem() throws Exception {
 		DataInputStream din = getInputStream();
-		Hashtable result = Util.readFromStrem(din, TestClass.class);
+		Map result = Util.readFromStrem(din, TestClass.class);
 		assertEquals(3, result.size());
 
 	}
@@ -42,7 +44,7 @@ public class UtilTest extends TestCase {
 	public void testReadFromStremEmptyTable() throws Exception {
 		table.clear();
 		DataInputStream din = getInputStream();
-		Hashtable result = Util.readFromStrem(din, TestClass.class);
+		Map result = Util.readFromStrem(din, TestClass.class);
 		assertEquals(0, result.size());
 
 	}
@@ -50,7 +52,7 @@ public class UtilTest extends TestCase {
 	public void testReadFromStremNullTable() throws Exception {
 		table = null;
 		DataInputStream din = getInputStream();
-		Hashtable result = Util.readFromStrem(din, TestClass.class);
+		Map result = Util.readFromStrem(din, TestClass.class);
 		assertEquals(0, result.size());
 
 	}

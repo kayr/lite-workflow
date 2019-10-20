@@ -3,7 +3,7 @@ package org.openxdata.workflow.engine;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.List;
 import org.openxdata.workflow.engine.persistent.Persistent;
 import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
@@ -13,12 +13,12 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
  */
 public class NetList implements Persistent {
 
-	private Vector<Net> nets;
+	private List<Net> nets;
 
 	public NetList() {
 	}
 
-	public NetList(Vector<Net> nets) {
+	public NetList(List<Net> nets) {
 		this.nets = nets;
 	}
 
@@ -30,11 +30,11 @@ public class NetList implements Persistent {
 		nets = PersistentHelper.read(dis, Net.class);
 	}
 
-	public void setNets(Vector<Net> nets) {
+	public void setNets(List<Net> nets) {
 		this.nets = nets;
 	}
 
-	public Vector<Net> getNets() {
+	public List<Net> getNets() {
 		return nets;
 	}
 }

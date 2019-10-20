@@ -6,7 +6,8 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,7 +19,7 @@ public abstract class Jucntion implements Persistent {
 		XOR, DIRECT, AND, OR
 	}
 
-	private Vector<Flow> flows = new Vector<Flow>(0);
+	private List<Flow> flows = new ArrayList<Flow>(0);
 	private Net rootNet;
 	private TYPE type = TYPE.DIRECT;
 
@@ -53,36 +54,36 @@ public abstract class Jucntion implements Persistent {
 		return rootNet;
 	}
 
-	public Vector<Flow> getFlows() {
+	public List<Flow> getFlows() {
 		return flows;
 	}
 
-	public void setFlows(Vector<Flow> outFlows) {
+	public void setFlows(List<Flow> outFlows) {
 		this.flows = outFlows;
 	}
 
 	public void setRootNet(Net rootNet) {
 		this.rootNet = rootNet;
 		for (int i = 0; i < flows.size(); i++) {
-			Flow flow = flows.elementAt(i);
+			Flow flow = flows.get(i);
 			flow.setRootNet(rootNet);
 		}
 	}
 
-	public Vector<Task> getAllNextTasks() {
-		Vector<Task> tasks = new Vector<Task>();
+	public List<Task> getAllNextTasks() {
+		List<Task> tasks = new ArrayList<Task>();
 		for (int i = 0; i < flows.size(); i++) {
-			Flow flow = flows.elementAt(i);
-			tasks.addElement(flow.getNextElement());
+			Flow flow = flows.get(i);
+			tasks.add(flow.getNextElement());
 		}
 		return tasks;
 	}
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < flows.size(); i++) {
-			Flow flow = flows.elementAt(i);
+			Flow flow = flows.get(i);
 			buffer.append(flow.toString());
 			if (i != (flows.size() - 1)) {
 				buffer.append(',');

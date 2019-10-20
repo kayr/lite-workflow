@@ -1,12 +1,11 @@
 package org.openxdata.workflow.engine;
 
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-import org.openxdata.workflow.engine.persistent.PersistentHelper;
+import java.util.*;
 
 /**
  *
@@ -14,49 +13,49 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
  */
 public class Net extends Element {
 
-	private Vector<Flow> outFlows = new Vector<Flow>(0);
-	private Hashtable<String, Task> netTasks = new Hashtable<String, Task>(0);
-	private Hashtable<String, String> extendAttributes = new Hashtable<String, String>();
+	private List<Flow> outFlows = new ArrayList<Flow>(0);
+	private Map<String, Task> netTasks = new HashMap<String, Task>(0);
+	private Map<String, String> extendAttributes = new HashMap<String, String>();
 	private Task.STATE status = Task.STATE.DISABLED;
 
 	public void addFlow(Flow e) {
-		outFlows.addElement(e);
+		outFlows.add(e);
 	}
 
-	public Vector<Flow> getOutFlows() {
+	public List<Flow> getOutFlows() {
 		return outFlows;
 	}
 
-	public void setOutFlows(Vector<Flow> outFlows) {
+	public void setOutFlows(List<Flow> outFlows) {
 		this.outFlows = outFlows;
 	}
 
 	public Flow addFlow() {
 		Flow flow = new Flow();
 		flow.setRootNet(this);
-		outFlows.addElement(flow);
+		outFlows.add(flow);
 		return flow;
 	}
 
-	public Vector<Task> getCurrentEnabledTasks() {
-		Vector<Task> tasks = new Vector<Task>(0);
-		Enumeration<Task> tasksEn = netTasks.elements();
-		while (tasksEn.hasMoreElements()) {
-			Task task = tasksEn.nextElement();
+	public List<Task> getCurrentEnabledTasks() {
+		List<Task> tasks = new ArrayList<Task>(0);
+		Iterator<Task> tasksEn = netTasks.values().iterator();
+		while (tasksEn.hasNext()) {
+			Task task = tasksEn.next();
 			if (task.getStatus() == Task.STATE.ENABLED) {
-				tasks.addElement(task);
+				tasks.add(task);
 			}
 		}
 		return tasks;
 	}
 
-	public Vector<Task> getTasks(Task.STATE status) {
-		Enumeration<Task> tasksEn = netTasks.elements();
-		Vector<Task> tasks = new Vector<Task>(0);
-		while (tasksEn.hasMoreElements()) {
-			Task task = tasksEn.nextElement();
+	public List<Task> getTasks(Task.STATE status) {
+		Iterator<Task> tasksEn = netTasks.values().iterator();
+		List<Task> tasks = new ArrayList<Task>(0);
+		while (tasksEn.hasNext()) {
+			Task task = tasksEn.next();
 			if (task.getStatus() == status) {
-				tasks.addElement(task);
+				tasks.add(task);
 			}
 		}
 		return tasks;
@@ -65,7 +64,7 @@ public class Net extends Element {
 	public void start() {
 		status = Task.STATE.ENABLED;
 		for (int i = 0; i < outFlows.size(); i++) {
-			Flow flow = outFlows.elementAt(i);
+			Flow flow = outFlows.get(i);
 			Task task = flow.getNextElement();
 			enableTask(task);
 
@@ -76,11 +75,10 @@ public class Net extends Element {
 		Task netTask = netTasks.get(task.getId());
 		//TODO  Do not complete already completed tasks
 
-		Hashtable<String, Variable> variables = task.getVariablesTable();
-		Enumeration<String> taskIdEnum = variables.keys();
+		Map<String, Variable> variables = task.getVariablesTable();
 
-		while (taskIdEnum.hasMoreElements()) {//TODO: Only Operate for output params
-			String varId = taskIdEnum.nextElement();
+
+		for (String varId : variables.keySet()) {//TODO: Only Operate for output params
 			String varValue = task.getValue(varId);
 			netTask.getVariable(varId).setValue(varValue);
 		}
@@ -100,12 +98,12 @@ public class Net extends Element {
 	}
 
 	protected void enableNextTasks(Task submitTask) {
-		Vector<Task> nextTasks = submitTask.getNextTasksInExec();
+		List<Task> nextTasks = submitTask.getNextTasksInExec();
 		if ((nextTasks.isEmpty() || isAllComplete(nextTasks)) && !hasEnabledTasks()) {
 			status = Task.STATE.COMPLETE;
 		}
 		for (int j = 0; j < nextTasks.size(); j++) {
-			Task nextTask = nextTasks.elementAt(j);
+			Task nextTask = nextTasks.get(j);
 			enableTask(nextTask);
 		}
 	}
@@ -130,16 +128,16 @@ public class Net extends Element {
 	public String toString() {
 		StringBuffer buff = new StringBuffer();
 		buff.append("Net: ").append(getId()).append("\n");
-		Enumeration<Task> netTasksEnm = netTasks.elements();
-		while (netTasksEnm.hasMoreElements()) {
-			Task task = netTasksEnm.nextElement();
+		Iterator<Task> netTasksEnm = netTasks.values().iterator();
+		while (netTasksEnm.hasNext()) {
+			Task task = netTasksEnm.next();
 			buff.append(task.toString()).append("\n");
 
 		}
 		return buff.toString();
 	}
 
-	public Hashtable<String, Task> getNetTasks() {
+	public Map<String, Task> getNetTasks() {
 		return netTasks;
 	}
 
@@ -151,11 +149,11 @@ public class Net extends Element {
 		return status == Task.STATE.COMPLETE;
 	}
 
-	public Hashtable<String, String> getExtendAttributes() {
+	public Map<String, String> getExtendAttributes() {
 		return extendAttributes;
 	}
 
-	public void setExtendAttributes(Hashtable<String, String> extendAttributes) {
+	public void setExtendAttributes(HashMap<String, String> extendAttributes) {
 		this.extendAttributes = extendAttributes;
 	}
 
@@ -177,21 +175,17 @@ public class Net extends Element {
 		extendAttributes = PersistentHelper.read(dis);
 
 		for (int i = 0; i < outFlows.size(); i++) {
-			Flow flow = outFlows.elementAt(i);
+			Flow flow = outFlows.get(i);
 			flow.setRootNet(this);
 		}
 
-		Enumeration<Task> tasksEn = netTasks.elements();
-		while (tasksEn.hasMoreElements()) {
-			Task task = tasksEn.nextElement();
+		for (Task task : netTasks.values()) {
 			task.setRootNet(this);
 		}
 	}
 
 	private boolean hasEnabledTasks() {
-		Enumeration<Task> tasks = netTasks.elements();
-		while (tasks.hasMoreElements()) {
-			Task task = tasks.nextElement();
+		for (Task task : netTasks.values()) {
 			if (task.getStatus() == Task.STATE.ENABLED) {
 				return true;
 			}
@@ -199,9 +193,8 @@ public class Net extends Element {
 		return false;
 	}
 
-	public boolean isAllComplete(Vector<Task> tasks) {
-		for (int i = 0; i < tasks.size(); i++) {
-			Task task = tasks.elementAt(i);
+	public boolean isAllComplete(List<Task> tasks) {
+		for (Task task : tasks) {
 			if (!task.isComplete()) {
 				return false;
 			}

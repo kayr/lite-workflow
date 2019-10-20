@@ -2,7 +2,9 @@ package org.openxdata.workflow.engine;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
+
 import junit.framework.TestCase;
 import static org.openxdata.workflow.engine.Util.*;
 
@@ -34,14 +36,14 @@ public class NetTest extends TestCase {
 
 	}
 
-	protected Hashtable<String, Variable> checkCorrectVariableTableSize(Task enabledTask, int size) {
-		Hashtable<String, Variable> variablesTable = enabledTask.getVariablesTable();
+	protected Map<String, Variable> checkCorrectVariableTableSize(Task enabledTask, int size) {
+		Map<String, Variable> variablesTable = enabledTask.getVariablesTable();
 		assertEquals(size + " varibles are expect in task " + enabledTask.toString(), size, variablesTable.size());
 		return variablesTable;
 	}
 
 	protected Variable checkVariable(Element element, String varName, String value) {
-		Hashtable<String, Variable> variablesTable = element.getVariablesTable();
+		Map<String, Variable> variablesTable = element.getVariablesTable();
 		Variable nameVariable = variablesTable.get(varName);
 
 		assertNotNull("Variable not expected to be null", nameVariable);
@@ -64,12 +66,12 @@ public class NetTest extends TestCase {
 
 	public void testGetOutFlows() {
 		System.out.println("getOutFlows");
-		Vector result = instance.getOutFlows();
+		List result = instance.getOutFlows();
 		assertEquals(1, result.size());
 	}
 
 	public void testNumberOfTasksIsFour() {
-		Hashtable<String, Task> netTasks = instance.getNetTasks();
+		Map<String, Task> netTasks = instance.getNetTasks();
 		assertEquals(4, netTasks.size());
 	}
 
@@ -79,7 +81,7 @@ public class NetTest extends TestCase {
 
 
 		//** ====================== Task 1  **//
-		Vector<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
+		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
 		assertEquals(currentEnabledTasks.size(), 1);
 
 		Task enabledTask = currentEnabledTasks.get(0);
@@ -166,7 +168,7 @@ public class NetTest extends TestCase {
 
 
 		//** ====================== Task 1  **//
-		Vector<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
+		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
 		assertEquals(currentEnabledTasks.size(), 1);
 
 		Task enabledTask = currentEnabledTasks.get(0);
@@ -192,7 +194,7 @@ public class NetTest extends TestCase {
 
 
 		//** ====================== Task 1  **//
-		Vector<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
+		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
 		assertEquals(currentEnabledTasks.size(), 1);
 
 		Task enabledTask = currentEnabledTasks.get(0);
@@ -285,7 +287,7 @@ public class NetTest extends TestCase {
 
 
 		//** ====================== Task 1  **//
-		Vector<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
+		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
 		assertEquals(currentEnabledTasks.size(), 1);
 
 		Task enabledTask = currentEnabledTasks.get(0);
@@ -308,7 +310,7 @@ public class NetTest extends TestCase {
 		assertEquals(2, currentEnabledTasks.size());
 
 		for (int i = 0; i < currentEnabledTasks.size(); i++) {
-			Task task = currentEnabledTasks.elementAt(i);
+			Task task = currentEnabledTasks.get(i);
 			if (task.getId().equals("Maternal_Info_6")) {
 				task.setValue("Pregnancy", "true");
 				completeTask(task);
@@ -379,7 +381,7 @@ public class NetTest extends TestCase {
 
 
 		//** ====================== Task 1  **//
-		Vector<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
+		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
 		assertEquals(currentEnabledTasks.size(), 1);
 
 		Task enabledTask = currentEnabledTasks.get(0);
@@ -402,7 +404,7 @@ public class NetTest extends TestCase {
 		assertEquals(2, currentEnabledTasks.size());
 
 		for (int i = 0; i < currentEnabledTasks.size(); i++) {
-			Task task = currentEnabledTasks.elementAt(i);
+			Task task = currentEnabledTasks.get(i);
 			if (task.getId().equals("Maternal_Info_6")) {
 				task.setValue("Pregnancy", "true");
 				completeTask(task);
@@ -460,7 +462,7 @@ public class NetTest extends TestCase {
 
 		net.start();
 
-		Vector<Task> currentEnabledTasks = net.getCurrentEnabledTasks();
+		List<Task> currentEnabledTasks = net.getCurrentEnabledTasks();
 		assertEquals(1, currentEnabledTasks.size());
 		completeTasks(currentEnabledTasks);
 
@@ -482,7 +484,7 @@ public class NetTest extends TestCase {
 	public void testNetCompletesWithOneTask() {
 		Net net = Resources.getNetWithOneTask();
 		net.start();
-		Vector<Task> tasks = net.getCurrentEnabledTasks();
+		List<Task> tasks = net.getCurrentEnabledTasks();
 		assertEquals("Tasks expected to be only one", 1, tasks.size());
 		Task task = tasks.get(0);
 		net.complete(task);
@@ -493,10 +495,10 @@ public class NetTest extends TestCase {
 		assertTrue("Net is expected to be complete", net.isComplete());
 	}
 
-	public void completeTasks(Vector<Task> tasks) {
+	public void completeTasks(List<Task> tasks) {
 
 		for (int i = 0; i < tasks.size(); i++) {
-			Task task = tasks.elementAt(i);
+			Task task = tasks.get(i);
 			task.getRootNet().complete(task);
 
 		}

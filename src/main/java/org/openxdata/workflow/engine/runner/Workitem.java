@@ -1,6 +1,7 @@
 package org.openxdata.workflow.engine.runner;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -8,7 +9,7 @@ import java.util.Hashtable;
  */
 public class Workitem {
 
-	private Hashtable<String, String> paramaters = new Hashtable<String, String>(0);
+	private Map<String, String> paramaters = new HashMap<String, String>(0);
 	private String caseID;
 	private String taskID;
 	private boolean submitted;
@@ -26,11 +27,11 @@ public class Workitem {
 		this.caseID = caseID;
 	}
 
-	public Hashtable<String, String> getParamaters() {
+	public Map<String, String> getParamaters() {
 		return paramaters;
 	}
 
-	public void setParamaters(Hashtable<String, String> paramaters) {
+	public void setParamaters(Map<String, String> paramaters) {
 		this.paramaters = paramaters;
 	}
 

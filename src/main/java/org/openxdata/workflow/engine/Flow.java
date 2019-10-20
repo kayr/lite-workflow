@@ -72,7 +72,7 @@ public class Flow implements Persistent {
 	public Task forFlowingIntoTask(Task task) {
 		task.setRootNet(rootNet);
 		setNextElement(task);
-		task.getInFlows().addElement(this);
+		task.getInFlows().add(this);
 		return task;
 	}
 

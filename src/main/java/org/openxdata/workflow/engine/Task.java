@@ -3,7 +3,7 @@ package org.openxdata.workflow.engine;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.List;
 import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
@@ -31,11 +31,11 @@ public class Task extends Element {
 		setName(name);
 	}
 
-	public Vector<Flow> getInFlows() {
+	public List<Flow> getInFlows() {
 		return join.getFlows();
 	}
 
-	public Vector<Flow> getOutFlows() {
+	public List<Flow> getOutFlows() {
 		return split.getFlows();
 	}
 
@@ -75,7 +75,7 @@ public class Task extends Element {
 		Flow flow = new Flow();
 		flow.setPreviousElement(this);
 		flow.setRootNet(getRootNet());
-		split.getFlows().addElement(flow);
+		split.getFlows().add(flow);
 		return flow;
 	}
 
@@ -105,7 +105,7 @@ public class Task extends Element {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("Task[").append(getId()).append("]{");
 		buffer.append(split.toString()).append('}');
 
@@ -113,7 +113,7 @@ public class Task extends Element {
 		return buffer.toString();
 	}
 
-	public Vector<Task> getNextTasksInExec() {
+	public List<Task> getNextTasksInExec() {
 		return split.getTasksInExec();
 	}
 

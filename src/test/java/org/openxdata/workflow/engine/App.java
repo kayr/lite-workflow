@@ -1,10 +1,8 @@
 package org.openxdata.workflow.engine;
 
 import java.io.PrintStream;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
+
 import static org.openxdata.workflow.engine.Util.*;
 
 /**
@@ -98,9 +96,9 @@ public class App {
 		out.println("[ERROR] Net Initialised");
 
 		while (net.isStarted()) {
-			Vector<Task> currentEnabledTasks = net.getCurrentEnabledTasks();
+			List<Task> currentEnabledTasks = net.getCurrentEnabledTasks();
 			for (int i = 0; i < currentEnabledTasks.size(); i++) {
-				Task task = currentEnabledTasks.elementAt(i);
+				Task task = currentEnabledTasks.get(i);
 				executeTask(task);
 				net.complete(task);
 				str += "," + task.getId();
@@ -114,22 +112,18 @@ public class App {
 	}
 
 	private static void executeTask(Element task) {
-		Hashtable<String, Variable> variablesTable = task.getVariablesTable();
+		Map<String, Variable> variablesTable = task.getVariablesTable();
 
 		System.out.println("\n[ERROR] !!!=====Task: " + task.getId() + " (" + task.getId() + ")");
 		out.println("=====  " + task + " ======");
 
-		Enumeration<Variable> elements = variablesTable.elements();
-		while (elements.hasMoreElements()) {
-			Variable variable = elements.nextElement();
+		for (Variable variable : variablesTable.values()) {
 			if (variable.isInput()) {
 				System.out.println("\t" + variable.getName() + "=" + variable.getValue());
 			}
 		}
-		elements = variablesTable.elements();
 
-		while (elements.hasMoreElements()) {
-			Variable variable = elements.nextElement();
+		for (Variable variable : variablesTable.values()) {
 			if ((!variable.isOutput() && !(task instanceof Net)) || (task instanceof Net && variable.isOutput())) {
 				continue;
 			}
