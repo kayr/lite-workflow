@@ -12,17 +12,14 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
  */
 public class Task extends Element {
 
-	public static enum STATE{
+	public enum STATE{
 		COMPLETE,DISABLED,ENABLED
 	}
 
-	public static final byte COMPLETE = 2;
-	public static final byte DISABLED = 3;
-	public static final byte ENABLED = 4;
 	private Split split = new Split();
 	private Join join = new Join();
 	private String name;
-	private byte status = DISABLED;
+	private STATE status = STATE.DISABLED;
 	private Integer studyId;
 	private Integer formId;
 
@@ -84,16 +81,16 @@ public class Task extends Element {
 
 	public Flow addAndOutFlow() {
 		Flow flow = addOutFlow();
-		split.setType(Jucntion.TYPE_AND);
+		split.setType(Jucntion.TYPE.AND);
 		return flow;
 	}
 
-	public Task havingJoinType(byte type) {
+	public Task havingJoinType(Jucntion.TYPE type) {
 		join.setType(type);
 		return this;
 	}
 
-	public Task havingSplitType(byte type) {
+	public Task havingSplitType(Jucntion.TYPE type) {
 		split.setType(type);
 		return this;
 	}
@@ -120,11 +117,11 @@ public class Task extends Element {
 		return split.getTasksInExec();
 	}
 
-	public byte getStatus() {
+	public STATE getStatus() {
 		return status;
 	}
 
-	public void setStatus(byte status) {
+	public void setStatus(STATE status) {
 		this.status = status;
 	}
 
@@ -138,7 +135,7 @@ public class Task extends Element {
 		join.write(dos);
 		split.write(dos);
 		dos.writeUTF(name);
-		dos.writeByte(status);
+		dos.writeUTF(status.name());
 		PersistentHelper.writeInteger(dos, studyId);
 		PersistentHelper.writeInteger(dos, formId);
 	}
@@ -150,12 +147,12 @@ public class Task extends Element {
 		split.read(dis);
 
 		name = dis.readUTF();
-		status = dis.readByte();
+		status = STATE.valueOf(dis.readUTF());
 		studyId = PersistentHelper.readInteger(dis);
 		formId = PersistentHelper.readInteger(dis);
 	}
 
 	boolean isComplete() {
-		return status == COMPLETE;
+		return status == STATE.COMPLETE;
 	}
 }

@@ -5,3 +5,6 @@ target/
 .svn
 build/
 .gradle/
+/bin/
+/.settings/
+/.vscode/

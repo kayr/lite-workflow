@@ -1,11 +1,12 @@
 package org.openxdata.workflow.engine;
 
+import org.openxdata.workflow.engine.persistent.Persistent;
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
-import org.openxdata.workflow.engine.persistent.Persistent;
-import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -13,39 +14,39 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
  */
 public abstract class Jucntion implements Persistent {
 
-	public static byte TYPE_XOR = 1;
-	public static byte TYPE_DIRECT = 2;
-	public static byte TYPE_AND = 3;
-	public static byte TYPE_OR = 4;
+	public enum TYPE {
+		XOR, DIRECT, AND, OR
+	}
+
 	private Vector<Flow> flows = new Vector<Flow>(0);
 	private Net rootNet;
-	private byte type;
+	private TYPE type = TYPE.DIRECT;
 
 	public Jucntion() {
 	}
 
-	public byte getType() {
+	public TYPE getType() {
 		return type;
 	}
 
-	public void setType(byte type) {
+	public void setType(TYPE type) {
 		this.type = type;
 	}
 
 	public boolean isDirect() {
-		return TYPE_DIRECT == type;
+		return TYPE.DIRECT == type;
 	}
 
 	public boolean isXOR() {
-		return TYPE_XOR == type;
+		return TYPE.XOR == type;
 	}
 
 	public boolean isAND() {
-		return TYPE_AND == type;
+		return TYPE.AND == type;
 	}
 
 	public boolean isOR() {
-		return TYPE_OR == type;
+		return TYPE.OR == type;
 	}
 
 	public Net getRootNet() {
@@ -83,7 +84,7 @@ public abstract class Jucntion implements Persistent {
 		for (int i = 0; i < flows.size(); i++) {
 			Flow flow = flows.elementAt(i);
 			buffer.append(flow.toString());
-			if (!(i == flows.size() - 1)) {
+			if (i != (flows.size() - 1)) {
 				buffer.append(',');
 			}
 		}
@@ -91,12 +92,12 @@ public abstract class Jucntion implements Persistent {
 	}
 
 	public void write(DataOutputStream dos) throws IOException {
-		dos.writeByte(type);
+		dos.writeUTF(type.name());
 		PersistentHelper.write(flows, dos);
 	}
 
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
-		type = dis.readByte();
+		type = TYPE.valueOf(dis.readUTF());
 		flows = PersistentHelper.read(dis, Flow.class);
 	}
 }

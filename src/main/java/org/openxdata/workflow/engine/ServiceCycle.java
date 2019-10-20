@@ -9,22 +9,22 @@ public class ServiceCycle {
 		Net net = new Net();
 
 		Task smeOne = (Task) net.addFlow().forFlowingIntoNewTask("First SMS", "first_sms")
-				.withParemeter("cowname", Variable.TYPE_INPUT).withParemeter("cowid", Variable.TYPE_INPUT);
+                                .withParemeter("cowname", Variable.TYPE.INPUT).withParemeter("cowid", Variable.TYPE.INPUT);
 
 		Task sms2 = (Task) smeOne.addOutFlow().forFlowingIntoNewTask("Second SMS", "secon_sms")
-				.withParemeter("cowname", Variable.TYPE_INPUT).withParemeter("cowid", Variable.TYPE_INPUT);
+                                 .withParemeter("cowname", Variable.TYPE.INPUT).withParemeter("cowid", Variable.TYPE.INPUT);
 
 		Task sms3 = (Task) sms2.addOutFlow().forFlowingIntoNewTask("Third SMS", "third_sms")
-				.withParemeter("cowname", Variable.TYPE_INPUT).withParemeter("cowid", Variable.TYPE_INPUT);
+                               .withParemeter("cowname", Variable.TYPE.INPUT).withParemeter("cowid", Variable.TYPE.INPUT);
 
 		Task confirmPregnancySMS = (Task) sms3.addOutFlow()
-				.forFlowingIntoNewTask("Confirm Pregnancy SMS", "confirm_preg_sms")
-				.withParemeter("cowname", Variable.TYPE_INPUT).withParemeter("cowid", Variable.TYPE_INPUT)
-				.withParemeter("is_pregnant", Variable.TYPE_OUTPUT);
+                                              .forFlowingIntoNewTask("Confirm Pregnancy SMS", "confirm_preg_sms")
+                                              .withParemeter("cowname", Variable.TYPE.INPUT).withParemeter("cowid", Variable.TYPE.INPUT)
+                                              .withParemeter("is_pregnant", Variable.TYPE.OUTPUT);
 
 		Task dryingSMS = (Task) confirmPregnancySMS.addOutFlow().withEqualCondititon("is_pregnant", "yes")
-				.forFlowingIntoNewTask("DRYING SMS", "drying_sms").withParemeter("cowname", Variable.TYPE_INPUT)
-				.withParemeter("cowid", Variable.TYPE_INPUT);
+				.forFlowingIntoNewTask("DRYING SMS", "drying_sms").withParemeter("cowname", Variable.TYPE.INPUT)
+				.withParemeter("cowid", Variable.TYPE.INPUT);
 
 		dryingSMS.addOutFlow().withEqualCondititon("is_pregnant", "no").forFlowingIntoTask(smeOne);
 

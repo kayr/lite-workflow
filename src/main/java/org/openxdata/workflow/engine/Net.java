@@ -17,7 +17,7 @@ public class Net extends Element {
 	private Vector<Flow> outFlows = new Vector<Flow>(0);
 	private Hashtable<String, Task> netTasks = new Hashtable<String, Task>(0);
 	private Hashtable<String, String> extendAttributes = new Hashtable<String, String>();
-	private byte status = Task.DISABLED;
+	private Task.STATE status = Task.STATE.DISABLED;
 
 	public void addFlow(Flow e) {
 		outFlows.addElement(e);
@@ -43,14 +43,14 @@ public class Net extends Element {
 		Enumeration<Task> tasksEn = netTasks.elements();
 		while (tasksEn.hasMoreElements()) {
 			Task task = tasksEn.nextElement();
-			if (task.getStatus() == Task.ENABLED) {
+			if (task.getStatus() == Task.STATE.ENABLED) {
 				tasks.addElement(task);
 			}
 		}
 		return tasks;
 	}
 
-	public Vector<Task> getTasks(byte status) {
+	public Vector<Task> getTasks(Task.STATE status) {
 		Enumeration<Task> tasksEn = netTasks.elements();
 		Vector<Task> tasks = new Vector<Task>(0);
 		while (tasksEn.hasMoreElements()) {
@@ -63,7 +63,7 @@ public class Net extends Element {
 	}
 
 	public void start() {
-		status = Task.ENABLED;
+		status = Task.STATE.ENABLED;
 		for (int i = 0; i < outFlows.size(); i++) {
 			Flow flow = outFlows.elementAt(i);
 			Task task = flow.getNextElement();
@@ -85,15 +85,15 @@ public class Net extends Element {
 			netTask.getVariable(varId).setValue(varValue);
 		}
 		netTask.processOutputMappings();
-		netTask.setStatus(Task.COMPLETE);
+		netTask.setStatus(Task.STATE.COMPLETE);
 		enableNextTasks(netTask);
 		return netTask;
 	}
 
 	protected void enableTask(Task nextTask) {
-		if (nextTask.getStatus() == Task.DISABLED && nextTask.areInFlowsComplete()) {
+		if (nextTask.getStatus() == Task.STATE.DISABLED && nextTask.areInFlowsComplete()) {
 			//TODO: Somehow add support for backward flows
-			nextTask.setStatus(Task.ENABLED);
+			nextTask.setStatus(Task.STATE.ENABLED);
 			nextTask.processInputMappings();
 		}
 
@@ -102,7 +102,7 @@ public class Net extends Element {
 	protected void enableNextTasks(Task submitTask) {
 		Vector<Task> nextTasks = submitTask.getNextTasksInExec();
 		if ((nextTasks.isEmpty() || isAllComplete(nextTasks)) && !hasEnabledTasks()) {
-			status = Task.COMPLETE;
+			status = Task.STATE.COMPLETE;
 		}
 		for (int j = 0; j < nextTasks.size(); j++) {
 			Task nextTask = nextTasks.elementAt(j);
@@ -144,11 +144,11 @@ public class Net extends Element {
 	}
 
 	public boolean isStarted() {
-		return status == Task.ENABLED;
+		return status == Task.STATE.ENABLED;
 	}
 
 	public boolean isComplete() {
-		return status == Task.COMPLETE;
+		return status == Task.STATE.COMPLETE;
 	}
 
 	public Hashtable<String, String> getExtendAttributes() {
@@ -164,7 +164,7 @@ public class Net extends Element {
 		super.write(dos);
 		PersistentHelper.write(outFlows, dos);
 		Util.writeToStream(dos, netTasks);
-		dos.writeByte(status);
+		dos.writeUTF(status.name());
 		PersistentHelper.write(extendAttributes, dos);
 	}
 
@@ -173,7 +173,7 @@ public class Net extends Element {
 		super.read(dis);
 		outFlows = PersistentHelper.read(dis, Flow.class);
 		netTasks = Util.readFromStrem(dis,  Task.class);
-		status = dis.readByte();
+		status = Task.STATE.valueOf(dis.readUTF());
 		extendAttributes = PersistentHelper.read(dis);
 
 		for (int i = 0; i < outFlows.size(); i++) {
@@ -192,7 +192,7 @@ public class Net extends Element {
 		Enumeration<Task> tasks = netTasks.elements();
 		while (tasks.hasMoreElements()) {
 			Task task = tasks.nextElement();
-			if (task.getStatus() == Task.ENABLED) {
+			if (task.getStatus() == Task.STATE.ENABLED) {
 				return true;
 			}
 		}

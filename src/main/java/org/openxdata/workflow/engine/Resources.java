@@ -14,23 +14,23 @@ public class Resources {
 		instance.setId("SampleNet");
 		Task enterdetails = new Task("EnterDetails", "enterdetails");
 		instance.addFlow().forFlowingIntoTask(enterdetails).
-			withParemeter("name", Variable.TYPE_OUTPUT).
-			withParemeter("sex", Variable.TYPE_OUTPUT);
+			withParemeter("name", TYPE.OUTPUT).
+			withParemeter("sex", TYPE.OUTPUT);
 
 		Task isfather = (Task) enterdetails.addOutFlow().withEqualCondititon("sex", "m").
 			forFlowingIntoNewTask("IsFather", "isfather").
-			withParemeter("name", Variable.TYPE_INPUT).
-			withParemeter("is_father", Variable.TYPE_OUTPUT);
+			withParemeter("name", TYPE.INPUT).
+			withParemeter("is_father", TYPE.OUTPUT);
 
 		Task ispregnant = (Task) enterdetails.addOutFlow().withEqualCondititon("sex", "f").
 			forFlowingIntoNewTask("IsPregnant", "ispregnant").
-			withParemeter("name", Variable.TYPE_INPUT).
-			withParemeter("is_pregnant", Variable.TYPE_OUTPUT);
+			withParemeter("name", TYPE.INPUT).
+			withParemeter("is_pregnant", TYPE.OUTPUT);
 
 		Task confirm = (Task) isfather.addOutFlow().forFlowingIntoNewTask("confirm", "confirm").
-			withParemeter("name", Variable.TYPE_IO).
-			withParemeter("sex", Variable.TYPE_IO).
-			withParemeter("detail", Variable.TYPE_IO, false).
+			withParemeter("name", TYPE.IO).
+			withParemeter("sex", TYPE.IO).
+			withParemeter("detail", TYPE.IO, false).
 			withInputMapping("is_father", "detail").
 			withOutputMapping("detail", "is_pregnant").
 			withOutputMapping("detail", "is_father");
@@ -46,12 +46,12 @@ public class Resources {
 		net.setId("Net2");
 		Task start = new Task("EnterName", "entername");
 		net.addFlow().forFlowingIntoTask(start).
-			withParemeter("name", Variable.TYPE_OUTPUT).
-			withParemeter("2name", Variable.TYPE_OUTPUT);
+			withParemeter("name", TYPE.OUTPUT).
+			withParemeter("2name", TYPE.OUTPUT);
 
 		start.addOutFlow().forFlowingIntoNewTask("Confirm", "confirm").
-			withParemeter("name", Variable.TYPE_IO).
-			withParemeter("2name", Variable.TYPE_IO);
+			withParemeter("name", TYPE.IO).
+			withParemeter("2name", TYPE.IO);
 
 		return net;
 	}
@@ -62,40 +62,40 @@ public class Resources {
 
 		Task reprodInfo = (Task) net.addFlow().
 			forFlowingIntoNewTask("Reproductive Info", "Reproductive_info_4").
-			withParemeter("Name", TYPE_INPUT).
-			withParemeter("village", TYPE_INPUT).
-			withParemeter("householdID", TYPE_INPUT).
-			withParemeter("Age", TYPE_INPUT).
-			withParemeter("familyplanningmethod", TYPE_OUTPUT);
+			withParemeter("Name", TYPE.INPUT).
+			withParemeter("village", TYPE.INPUT).
+			withParemeter("householdID", TYPE.INPUT).
+			withParemeter("Age", TYPE.INPUT).
+			withParemeter("familyplanningmethod", TYPE.OUTPUT);
 
 		Task maternalInfo = (Task) reprodInfo.addAndOutFlow().
 			forFlowingIntoNewTask("Maternal Info", "Maternal_Info_6").
-			withParemeter("Name", TYPE_INPUT).
-			withParemeter("village", TYPE_INPUT).
-			withParemeter("householdID", TYPE_INPUT).
-			withParemeter("Age", TYPE_INPUT).
-			withParemeter("Pregnancy", TYPE_OUTPUT);
+			withParemeter("Name", TYPE.INPUT).
+			withParemeter("village", TYPE.INPUT).
+			withParemeter("householdID", TYPE.INPUT).
+			withParemeter("Age", TYPE.INPUT).
+			withParemeter("Pregnancy", TYPE.OUTPUT);
 
 		Task childInfo = (Task) maternalInfo.addOutFlow().
 			withEqualCondititon("Pregnancy", "true").
 			forFlowingIntoNewTask("Child Info", "Child_Info_7").
-			withParemeter("Name", TYPE_INPUT).
-			withParemeter("village", TYPE_INPUT).
-			withParemeter("householdID", TYPE_INPUT).
-			withParemeter("Age", TYPE_INPUT).
-			withParemeter("dateofbirth", TYPE_OUTPUT);
+			withParemeter("Name", TYPE.INPUT).
+			withParemeter("village", TYPE.INPUT).
+			withParemeter("householdID", TYPE.INPUT).
+			withParemeter("Age", TYPE.INPUT).
+			withParemeter("dateofbirth", TYPE.OUTPUT);
 
 		Task updateRegister = (Task) reprodInfo.addAndOutFlow().
 			forFlowingIntoNewTask("Update Register", "Update_Register_9").
-			withParemeter("Name", TYPE_INPUT).
-			withParemeter("village", TYPE_INPUT).
-			withParemeter("householdID", TYPE_INPUT).
-			withParemeter("Age", TYPE_INPUT).
-			withParemeter("educationlevel", TYPE_OUTPUT);
+			withParemeter("Name", TYPE.INPUT).
+			withParemeter("village", TYPE.INPUT).
+			withParemeter("householdID", TYPE.INPUT).
+			withParemeter("Age", TYPE.INPUT).
+			withParemeter("educationlevel", TYPE.OUTPUT);
 
 		Task finish = updateRegister.addOutFlow().
 			forFlowingIntoNewTask("Finish", "finish").
-			havingJoinType(Jucntion.TYPE_AND);
+			havingJoinType(Jucntion.TYPE.AND);
 
 		childInfo.addOutFlow().forFlowingIntoTask(finish);
 		maternalInfo.addOutFlow().forFlowingIntoTask(finish);
@@ -106,8 +106,8 @@ public class Resources {
 	public static Net getNetWithOneTask() {
 		Net net = new Net();
 		net.addFlow().forFlowingIntoNewTask("SomeTask", "SomeTask").
-			withParemeter("name", Variable.TYPE_INPUT).
-			withParemeter("sex", Variable.TYPE_OUTPUT);
+			withParemeter("name", TYPE.INPUT).
+			withParemeter("sex", TYPE.OUTPUT);
 		return net;
 	}
 
@@ -117,49 +117,49 @@ public class Resources {
 
 		Task newPregnancy = (Task) net.addFlow().
 			forFlowingIntoNewTask("New Pregnancy", "New_Pregancy_10").
-			havingSplitType(Jucntion.TYPE_XOR).
-			withParemeter("VillageName", TYPE_INPUT).
-			withParemeter("VillageLocation", TYPE_INPUT).
-			withParemeter("VillageCode", TYPE_INPUT).
-			withParemeter("MotherID_", TYPE_INPUT).
-			withParemeter("RoundNumber", TYPE_INPUT).
-			withParemeter("FACode", TYPE_INPUT).
-			withParemeter("WomanName_", TYPE_INPUT).
-			withParemeter("enumerator_u", TYPE_INPUT).
-			withParemeter("newpregnancy", TYPE_OUTPUT).
-			withParemeter("AnyPreviousBirth", TYPE_OUTPUT);
+			havingSplitType(Jucntion.TYPE.XOR).
+			withParemeter("VillageName", TYPE.INPUT).
+			withParemeter("VillageLocation", TYPE.INPUT).
+			withParemeter("VillageCode", TYPE.INPUT).
+			withParemeter("MotherID_", TYPE.INPUT).
+			withParemeter("RoundNumber", TYPE.INPUT).
+			withParemeter("FACode", TYPE.INPUT).
+			withParemeter("WomanName_", TYPE.INPUT).
+			withParemeter("enumerator_u", TYPE.INPUT).
+			withParemeter("newpregnancy", TYPE.OUTPUT).
+			withParemeter("AnyPreviousBirth", TYPE.OUTPUT);
 
 		Task registerPregnancy = (Task) newPregnancy.addOutFlow().
 			withEqualCondititon("newpregnancy", "Yes").
 			forFlowingIntoNewTask("Pregnancy Register", "Pregnancy_Registration_4").
-			havingJoinType(Jucntion.TYPE_OR).
-			withParemeter("VillageName", TYPE_INPUT).
-			withParemeter("VillageLocation", TYPE_INPUT).
-			withParemeter("VillageCode", TYPE_INPUT).
-			withParemeter("MotherID_", TYPE_INPUT).
-			withParemeter("RoundNumber", TYPE_INPUT).
-			withParemeter("FACode", TYPE_INPUT).
-			withParemeter("WomanName_", TYPE_INPUT).
-			withParemeter("enumerator_u", TYPE_INPUT);
+			havingJoinType(Jucntion.TYPE.OR).
+			withParemeter("VillageName", TYPE.INPUT).
+			withParemeter("VillageLocation", TYPE.INPUT).
+			withParemeter("VillageCode", TYPE.INPUT).
+			withParemeter("MotherID_", TYPE.INPUT).
+			withParemeter("RoundNumber", TYPE.INPUT).
+			withParemeter("FACode", TYPE.INPUT).
+			withParemeter("WomanName_", TYPE.INPUT).
+			withParemeter("enumerator_u", TYPE.INPUT);
 
 		Task pregnancyOutcome = (Task) newPregnancy.addOutFlow().
 			withEqualCondititon("AnyPreviousBirth", "Yes").
 			forFlowingIntoNewTask("Pregancy Birth Outcome", "Pregnancy_Birth_Outcome_5").
-			havingJoinType(Jucntion.TYPE_OR).
-			withParemeter("VillageName", TYPE_INPUT).
-			withParemeter("VillageLocation", TYPE_INPUT).
-			withParemeter("VillageCode", TYPE_INPUT).
-			withParemeter("MotherID_", TYPE_INPUT).
-			withParemeter("RoundNumber", TYPE_INPUT).
-			withParemeter("FACode", TYPE_INPUT).
-			withParemeter("WomanName_", TYPE_INPUT).
-			withParemeter("WomanPregnant", TYPE_INPUT).
-			withParemeter("enumerator_u", TYPE_INPUT);
+			havingJoinType(Jucntion.TYPE.OR).
+			withParemeter("VillageName", TYPE.INPUT).
+			withParemeter("VillageLocation", TYPE.INPUT).
+			withParemeter("VillageCode", TYPE.INPUT).
+			withParemeter("MotherID_", TYPE.INPUT).
+			withParemeter("RoundNumber", TYPE.INPUT).
+			withParemeter("FACode", TYPE.INPUT).
+			withParemeter("WomanName_", TYPE.INPUT).
+			withParemeter("WomanPregnant", TYPE.INPUT).
+			withParemeter("enumerator_u", TYPE.INPUT);
 
 		net.setValue("WomanPregnant", "No");
 
 		Task finTask = registerPregnancy.addOutFlow().forFlowingIntoNewTask("Finish", "finish").
-			havingJoinType(Jucntion.TYPE_AND);
+			havingJoinType(Jucntion.TYPE.AND);
 		newPregnancy.addOutFlow().forFlowingIntoTask(finTask);
 		pregnancyOutcome.addOutFlow().forFlowingIntoTask(finTask);
 		return net;

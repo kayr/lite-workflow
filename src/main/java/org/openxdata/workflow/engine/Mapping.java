@@ -3,6 +3,8 @@ package org.openxdata.workflow.engine;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.EnumSet;
+
 import org.openxdata.workflow.engine.persistent.Persistent;
 
 /**
@@ -15,9 +17,9 @@ public class Mapping implements Persistent {
 	private String netVariable;
 	private String taskVarId;
 	private String taskID;
-	private byte flow;
+	private Variable.TYPE flow;
 
-	public Mapping(String netVariable, String taskVariable, String taskID, byte input) {
+	public Mapping(String netVariable, String taskVariable, String taskID, Variable.TYPE input) {
 		this.netVariable = netVariable;
 		this.taskVarId = taskVariable;
 		this.taskID = taskID;
@@ -54,7 +56,7 @@ public class Mapping implements Persistent {
 		return rootNet;
 	}
 
-	public byte getFlow() {
+	public Variable.TYPE getFlow() {
 		return flow;
 	}
 
@@ -66,13 +68,13 @@ public class Mapping implements Persistent {
 		dos.writeUTF(netVariable);
 		dos.writeUTF(taskID);
 		dos.writeUTF(taskVarId);
-		dos.writeByte(flow);
+		dos.writeUTF(flow.name());
 	}
 
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		netVariable = dis.readUTF();
 		taskID = dis.readUTF();
 		taskVarId = dis.readUTF();
-		flow = dis.readByte();
+		flow = Variable.TYPE.valueOf(dis.readUTF());
 	}
 }

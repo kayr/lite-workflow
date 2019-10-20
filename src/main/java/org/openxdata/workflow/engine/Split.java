@@ -24,7 +24,7 @@ public class Split extends Jucntion {
 					break;
 				}
 			} else {
-				flow.getNextElement().setStatus(Task.COMPLETE);
+				flow.getNextElement().setStatus(Task.STATE.COMPLETE);
 			}
 		}
 
@@ -32,7 +32,7 @@ public class Split extends Jucntion {
 			for (int i = 0; i < outFlows.size(); i++) {
 				Flow flow = outFlows.elementAt(i);
 				if (!tasks.contains(flow.getNextElement())) {
-					flow.getNextElement().setStatus(Task.COMPLETE);
+					flow.getNextElement().setStatus(Task.STATE.COMPLETE);
 				}
 			}
 		}

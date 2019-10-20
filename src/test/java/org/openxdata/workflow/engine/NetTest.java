@@ -369,7 +369,7 @@ public class NetTest extends TestCase {
 	public void testNetDoesNotEndPrematurely() {
 		instance = Resources.getNetWithAnd1();
 
-		instance.getTask("finish").havingJoinType(Jucntion.TYPE_OR);
+		instance.getTask("finish").havingJoinType(Jucntion.TYPE.OR);
 		instance.setValue("Name", "tonny");
 		instance.setValue("village", "Kiwatule");
 		instance.setValue("householdID", "HID205");

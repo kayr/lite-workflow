@@ -1,9 +1,10 @@
 package org.openxdata.workflow.engine;
 
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -11,17 +12,18 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
  */
 public class Variable implements IdPersistent {
 
-	public final static byte TYPE_INPUT = 1;
-	public final static byte TYPE_OUTPUT = 2;
-	public final static byte TYPE_IO = 3;
+	public enum TYPE {
+		INPUT, OUTPUT, IO
+	}
+
 	private String name;
 	private String value;
-	private byte flow;
+	private TYPE flow;
 
 	public Variable() {
 	}
 
-	public Variable(String name, String value, byte type) {
+	public Variable(String name, String value, TYPE type) {
 		this.name = name;
 		this.value = value;
 		this.flow = type;
@@ -35,11 +37,11 @@ public class Variable implements IdPersistent {
 		this.name = name;
 	}
 
-	public byte getFlow() {
+	public TYPE getFlow() {
 		return flow;
 	}
 
-	public void setFlow(byte type) {
+	public void setFlow(TYPE type) {
 		this.flow = type;
 	}
 
@@ -52,15 +54,15 @@ public class Variable implements IdPersistent {
 	}
 
 	public boolean isInput() {
-		return flow == TYPE_INPUT || isInputOutput();
+		return flow == TYPE.INPUT || isInputOutput();
 	}
 
 	public boolean isOutput() {
-		return flow == TYPE_OUTPUT || isInputOutput();
+		return flow == TYPE.OUTPUT || isInputOutput();
 	}
 
 	public boolean isInputOutput() {
-		return flow == TYPE_IO;
+		return flow == TYPE.IO;
 	}
 
 	public void copyToNetVariable() {
@@ -81,12 +83,12 @@ public class Variable implements IdPersistent {
 	public void write(DataOutputStream dos) throws IOException {
 		dos.writeUTF(name);
 		PersistentHelper.writeUTF(dos, value);
-		dos.writeByte(flow);
+		dos.writeUTF(flow.name());
 	}
 
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		name = dis.readUTF();
 		value = PersistentHelper.readUTF(dis);
-		flow = dis.readByte();
+		flow = TYPE.valueOf(dis.readUTF());
 	}
 }
