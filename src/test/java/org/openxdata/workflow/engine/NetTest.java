@@ -1,7 +1,6 @@
 package org.openxdata.workflow.engine;
 
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -371,7 +370,7 @@ public class NetTest extends TestCase {
 	public void testNetDoesNotEndPrematurely() {
 		instance = Resources.getNetWithAnd1();
 
-		instance.getTask("finish").havingJoinType(Jucntion.TYPE.OR);
+		instance.getTask("finish").havingJoinType(Junction.TYPE.OR);
 		instance.setValue("Name", "tonny");
 		instance.setValue("village", "Kiwatule");
 		instance.setValue("householdID", "HID205");

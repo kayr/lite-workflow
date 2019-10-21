@@ -81,16 +81,16 @@ public class Task extends Element {
 
 	public Flow addAndOutFlow() {
 		Flow flow = addOutFlow();
-		split.setType(Jucntion.TYPE.AND);
+		split.setType(Junction.TYPE.AND);
 		return flow;
 	}
 
-	public Task havingJoinType(Jucntion.TYPE type) {
+	public Task havingJoinType(Junction.TYPE type) {
 		join.setType(type);
 		return this;
 	}
 
-	public Task havingSplitType(Jucntion.TYPE type) {
+	public Task havingSplitType(Junction.TYPE type) {
 		split.setType(type);
 		return this;
 	}

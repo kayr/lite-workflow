@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author kay
  */
-public class Split extends Jucntion {
+public class Split extends Junction {
 
 	public List<Task> getTasksInExec() {
 		if (isAND()) {
@@ -15,8 +15,7 @@ public class Split extends Jucntion {
 		}
 		List<Flow> outFlows = getFlows();
 		List<Task> tasks = new ArrayList<Task>(0);
-		for (int i = 0; i < outFlows.size(); i++) {
-			Flow flow = outFlows.get(i);
+		for (Flow flow : outFlows) {
 			if (flow.isFlowAllowed()) {
 				tasks.add(flow.getNextElement());
 				if (isXOR()) {

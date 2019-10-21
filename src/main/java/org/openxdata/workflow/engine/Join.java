@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author kay
  */
-public class Join extends Jucntion {
+public class Join extends Junction {
 
 	boolean areTasksComplete() {
 		//TODO:Support for different types of join ie. XOR, OR, AND

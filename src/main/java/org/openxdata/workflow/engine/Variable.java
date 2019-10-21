@@ -86,7 +86,7 @@ public class Variable implements IdPersistent {
 		dos.writeUTF(flow.name());
 	}
 
-	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
+	public void read(DataInputStream dis) throws IOException {
 		name = dis.readUTF();
 		value = PersistentHelper.readUTF(dis);
 		flow = FLOW.valueOf(dis.readUTF());

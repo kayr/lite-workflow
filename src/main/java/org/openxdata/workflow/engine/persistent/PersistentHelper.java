@@ -270,7 +270,7 @@ public class PersistentHelper {
 		return persistentList;
 	}
 
-	public static List readIntegers(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
+	public static List readIntegers(DataInputStream dis) throws IOException {
 		
 		byte len = dis.readByte();
 
@@ -289,10 +289,8 @@ public class PersistentHelper {
 	 * @param dis
 	 * @return
 	 * @throws IOException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
 	 */
-	public static List readBytes(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
+	public static List readBytes(DataInputStream dis) throws IOException {
 		
 		byte len = dis.readByte();
 

@@ -13,17 +13,17 @@ import java.util.List;
  *
  * @author kay
  */
-public abstract class Jucntion implements Persistent {
+public abstract class Junction implements Persistent {
 
 	public enum TYPE {
 		XOR, DIRECT, AND, OR
 	}
 
-	private List<Flow> flows = new ArrayList<Flow>(0);
+	private List<Flow> flows = new ArrayList<>(0);
 	private Net rootNet;
 	private TYPE type = TYPE.DIRECT;
 
-	public Jucntion() {
+	public Junction() {
 	}
 
 	public TYPE getType() {
@@ -71,7 +71,7 @@ public abstract class Jucntion implements Persistent {
 	}
 
 	public List<Task> getAllNextTasks() {
-		List<Task> tasks = new ArrayList<Task>();
+		List<Task> tasks = new ArrayList<>();
 		for (int i = 0; i < flows.size(); i++) {
 			Flow flow = flows.get(i);
 			tasks.add(flow.getNextElement());

@@ -18,6 +18,9 @@ public class Net extends Element {
 	private Map<String, String> extendAttributes = new HashMap<String, String>();
 	private Task.STATE status = Task.STATE.DISABLED;
 
+	private final Task startTask = new Task("START", "__start__");
+	private final Task endTask = new Task("START", "__end__");
+
 	public void addFlow(Flow e) {
 		outFlows.add(e);
 	}
@@ -63,8 +66,7 @@ public class Net extends Element {
 
 	public void start() {
 		status = Task.STATE.ENABLED;
-		for (int i = 0; i < outFlows.size(); i++) {
-			Flow flow = outFlows.get(i);
+		for (Flow flow : outFlows) {
 			Task task = flow.getNextElement();
 			enableTask(task);
 

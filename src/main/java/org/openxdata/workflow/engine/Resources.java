@@ -95,7 +95,7 @@ public class Resources {
 
 		Task finish = updateRegister.addOutFlow().
 			forFlowingIntoNewTask("Finish", "finish").
-			havingJoinType(Jucntion.TYPE.AND);
+			havingJoinType(Junction.TYPE.AND);
 
 		childInfo.addOutFlow().forFlowingIntoTask(finish);
 		maternalInfo.addOutFlow().forFlowingIntoTask(finish);
@@ -117,7 +117,7 @@ public class Resources {
 
 		Task newPregnancy = (Task) net.addFlow().
 			forFlowingIntoNewTask("New Pregnancy", "New_Pregancy_10").
-			havingSplitType(Jucntion.TYPE.XOR).
+			havingSplitType(Junction.TYPE.XOR).
                                               withParameter("VillageName", FLOW.INPUT).
                                               withParameter("VillageLocation", FLOW.INPUT).
                                               withParameter("VillageCode", FLOW.INPUT).
@@ -132,7 +132,7 @@ public class Resources {
 		Task registerPregnancy = (Task) newPregnancy.addOutFlow().
 			withEqualCondititon("newpregnancy", "Yes").
 			forFlowingIntoNewTask("Pregnancy Register", "Pregnancy_Registration_4").
-			havingJoinType(Jucntion.TYPE.OR).
+			havingJoinType(Junction.TYPE.OR).
                                                             withParameter("VillageName", FLOW.INPUT).
                                                             withParameter("VillageLocation", FLOW.INPUT).
                                                             withParameter("VillageCode", FLOW.INPUT).
@@ -145,7 +145,7 @@ public class Resources {
 		Task pregnancyOutcome = (Task) newPregnancy.addOutFlow().
 			withEqualCondititon("AnyPreviousBirth", "Yes").
 			forFlowingIntoNewTask("Pregancy Birth Outcome", "Pregnancy_Birth_Outcome_5").
-			havingJoinType(Jucntion.TYPE.OR).
+			havingJoinType(Junction.TYPE.OR).
                                                            withParameter("VillageName", FLOW.INPUT).
                                                            withParameter("VillageLocation", FLOW.INPUT).
                                                            withParameter("VillageCode", FLOW.INPUT).
@@ -159,7 +159,7 @@ public class Resources {
 		net.setValue("WomanPregnant", "No");
 
 		Task finTask = registerPregnancy.addOutFlow().forFlowingIntoNewTask("Finish", "finish").
-			havingJoinType(Jucntion.TYPE.AND);
+			havingJoinType(Junction.TYPE.AND);
 		newPregnancy.addOutFlow().forFlowingIntoTask(finTask);
 		pregnancyOutcome.addOutFlow().forFlowingIntoTask(finTask);
 		return net;
