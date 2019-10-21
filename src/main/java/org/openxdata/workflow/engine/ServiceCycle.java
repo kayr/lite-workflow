@@ -22,13 +22,13 @@ public class ServiceCycle {
 											  .withParameter("cowname", Variable.FLOW.INPUT).withParameter("cowid", Variable.FLOW.INPUT)
 											  .withParameter("is_pregnant", Variable.FLOW.OUTPUT);
 
-		Task dryingSMS = (Task) confirmPregnancySMS.addOutFlow().withEqualCondititon("is_pregnant", "yes")
+		Task dryingSMS = (Task) confirmPregnancySMS.addOutFlow().withEqualCondition("is_pregnant", "yes")
 				.forFlowingIntoNewTask("DRYING SMS", "drying_sms").withParameter("cowname", Variable.FLOW.INPUT)
 				.withParameter("cowid", Variable.FLOW.INPUT);
 
-		dryingSMS.addOutFlow().withEqualCondititon("is_pregnant", "no").forFlowingIntoTask(smeOne);
+		dryingSMS.addOutFlow().withEqualCondition("is_pregnant", "no").forFlowingIntoTask(smeOne);
 
-		Task steamingSms = (Task) dryingSMS.addOutFlow().forFlowingIntoNewTask("Steaming", "steaming");
+		Task steamingSms = dryingSMS.addOutFlow().forFlowingIntoNewTask("Steaming", "steaming");
 
 		return net;
 	}

@@ -82,7 +82,7 @@ public class Flow implements Persistent {
 		return forFlowingIntoTask(task);
 	}
 
-	public Flow withEqualCondititon(String taskVariable, String value) {
+	public Flow withEqualCondition(String taskVariable, String value) {
 		condition = new Condition(taskVariable, value, previousTaskName);
 		condition.setRootNet(rootNet);
 		condition.setTaskName(previousTaskName);

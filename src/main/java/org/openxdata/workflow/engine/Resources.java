@@ -17,12 +17,12 @@ public class Resources {
                 withParameter("name", FLOW.OUTPUT).
                         withParameter("sex", FLOW.OUTPUT);
 
-		Task isfather = (Task) enterdetails.addOutFlow().withEqualCondititon("sex", "m").
+		Task isfather = (Task) enterdetails.addOutFlow().withEqualCondition("sex", "m").
 			forFlowingIntoNewTask("IsFather", "isfather").
                                                    withParameter("name", FLOW.INPUT).
                                                    withParameter("is_father", FLOW.OUTPUT);
 
-		Task ispregnant = (Task) enterdetails.addOutFlow().withEqualCondititon("sex", "f").
+		Task ispregnant = (Task) enterdetails.addOutFlow().withEqualCondition("sex", "f").
 			forFlowingIntoNewTask("IsPregnant", "ispregnant").
                                                      withParameter("name", FLOW.INPUT).
                                                      withParameter("is_pregnant", FLOW.OUTPUT);
@@ -77,7 +77,7 @@ public class Resources {
                                                      withParameter("Pregnancy", FLOW.OUTPUT);
 
 		Task childInfo = (Task) maternalInfo.addOutFlow().
-			withEqualCondititon("Pregnancy", "true").
+				withEqualCondition("Pregnancy", "true").
 			forFlowingIntoNewTask("Child Info", "Child_Info_7").
                                                     withParameter("Name", FLOW.INPUT).
                                                     withParameter("village", FLOW.INPUT).
@@ -130,7 +130,7 @@ public class Resources {
                                               withParameter("AnyPreviousBirth", FLOW.OUTPUT);
 
 		Task registerPregnancy = (Task) newPregnancy.addOutFlow().
-			withEqualCondititon("newpregnancy", "Yes").
+				withEqualCondition("newpregnancy", "Yes").
 			forFlowingIntoNewTask("Pregnancy Register", "Pregnancy_Registration_4").
 			havingJoinType(Junction.TYPE.OR).
                                                             withParameter("VillageName", FLOW.INPUT).
@@ -143,7 +143,7 @@ public class Resources {
                                                             withParameter("enumerator_u", FLOW.INPUT);
 
 		Task pregnancyOutcome = (Task) newPregnancy.addOutFlow().
-			withEqualCondititon("AnyPreviousBirth", "Yes").
+				withEqualCondition("AnyPreviousBirth", "Yes").
 			forFlowingIntoNewTask("Pregancy Birth Outcome", "Pregnancy_Birth_Outcome_5").
 			havingJoinType(Junction.TYPE.OR).
                                                            withParameter("VillageName", FLOW.INPUT).

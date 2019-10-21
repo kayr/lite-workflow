@@ -29,8 +29,7 @@ public class Mapping implements Persistent {
 	}
 
 	public Task getTask() {
-		Task task = rootNet.getTask(taskID);
-		return task;
+		return rootNet.getTask(taskID);
 	}
 
 	public void performInputCopy() {
@@ -43,8 +42,8 @@ public class Mapping implements Persistent {
 	public void performOutputCopy() {
 		Task task1 = getTask();
 		String taskValue = task1.getValue(taskVarId);
-		Variable netVarible = rootNet.getVariable(netVariable);
-		netVarible.setValue(taskValue);
+		Variable netVariable = rootNet.getVariable(this.netVariable);
+		netVariable.setValue(taskValue);
 	}
 
 	public void setRootNet(Net rootNet) {

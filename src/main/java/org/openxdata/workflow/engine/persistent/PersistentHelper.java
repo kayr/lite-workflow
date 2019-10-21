@@ -35,13 +35,13 @@ public class PersistentHelper {
 	 * Writes an Integer to the stream.
 	 * 
 	 * @param dos - the stream for writing.
-	 * @param data - the Interger to write.
+	 * @param data - the Integer to write.
 	 * @throws IOException - thrown when a problem occurs during the writing to stream.
 	 */
 	public static void writeInteger(DataOutputStream dos,Integer data) throws IOException{
 		if(data != null){
 			dos.writeBoolean(true);
-			dos.writeInt(data.intValue());
+			dos.writeInt(data);
 		}
 		else
 			dos.writeBoolean(false);
@@ -73,7 +73,7 @@ public class PersistentHelper {
 	public static void writeBoolean(DataOutputStream dos,Boolean data) throws IOException{
 		if(data != null){
 			dos.writeBoolean(true);
-			dos.writeBoolean(data.booleanValue());
+			dos.writeBoolean(data);
 		}
 		else
 			dos.writeBoolean(false);
@@ -141,8 +141,8 @@ public class PersistentHelper {
 	public static void write(List persistentList, DataOutputStream dos) throws IOException {
 		if (persistentList != null) {
 			dos.writeByte(persistentList.size());
-			for (int i = 0; i < persistentList.size(); i++) {
-				((Persistent) persistentList.get(i)).write(dos);
+			for (Object o : persistentList) {
+				((Persistent) o).write(dos);
 			}
 		}
 		else
@@ -159,8 +159,8 @@ public class PersistentHelper {
 	public static void writeBig(List persistentList, DataOutputStream dos) throws IOException {
 		if (persistentList != null) {
 			dos.writeInt(persistentList.size());
-			for (int i = 0; i < persistentList.size(); i++) {
-				((Persistent) persistentList.get(i)).write(dos);
+			for (Object o : persistentList) {
+				((Persistent) o).write(dos);
 			}
 		}
 		else
@@ -170,8 +170,8 @@ public class PersistentHelper {
 	public static void write(List persistentList, DataOutputStream dos, int len) throws IOException {
 		if (persistentList != null) {
 			dos.writeInt(persistentList.size());
-			for (int i = 0; i < persistentList.size(); i++) {
-				((Persistent) persistentList.get(i)).write(dos);
+			for (Object o : persistentList) {
+				((Persistent) o).write(dos);
 			}
 		}
 		else
@@ -181,8 +181,7 @@ public class PersistentHelper {
 	public static void writeIntegers(List intList, DataOutputStream dos) throws IOException {
 		if (intList != null) {
 			dos.writeByte(intList.size());
-			for (int i = 0; i < intList.size(); i++)
-				dos.writeInt(((Integer) intList.get(i)).intValue());
+			for (Object o : intList) dos.writeInt((Integer) o);
 		}
 		else
 			dos.writeByte(0);
@@ -198,8 +197,7 @@ public class PersistentHelper {
 	public static void writeBytes(List byteList, DataOutputStream dos) throws IOException {
 		if (byteList != null) {
 			dos.writeByte(byteList.size());
-			for (int i = 0; i < byteList.size(); i++)
-				dos.writeByte(((Byte) byteList.get(i)).byteValue());
+			for (Object o : byteList) dos.writeByte((Byte) o);
 		}
 		else
 			dos.writeByte(0);
@@ -210,9 +208,9 @@ public class PersistentHelper {
 	 * 
 	 * @param dis - the stream to read from.
 	 * @param cls - the class of the persistent objects contained in the vector.
-	 * @return - the List of persistent objets or null if none.
+	 * @return - the List of persistent objects or null if none.
 	 * @throws IOException - thrown when a problem occurs during the reading from stream.
-	 * @throws InstantiationException - thrown when a problem occurs during the peristent object creation.
+	 * @throws InstantiationException - thrown when a problem occurs during the persistent object creation.
 	 * @throws IllegalAccessException - thrown when a problem occurs when setting values of the persistent object.
 	 */
 	public static List read(DataInputStream dis, Class cls) throws IOException, InstantiationException, IllegalAccessException {

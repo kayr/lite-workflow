@@ -25,8 +25,8 @@ public class Util {
 		}
 	}
 
-	public static <T extends IdPersistent> HashMap<String, T> readFromStrem(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
-		HashMap<String, T> table = new HashMap<String, T>();
+	public static <T extends IdPersistent> Map<String, T> readFromStrem(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
+		Map<String, T> table = new HashMap<>();
 		short len = din.readShort();
 
 		for (short i = 0; i < len; i++) {

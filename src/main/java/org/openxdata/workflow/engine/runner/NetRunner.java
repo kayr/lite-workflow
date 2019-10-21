@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class NetRunner extends org.openxdata.workflow.engine.persistent.AbstractRecord {
 
-    private Map<String, String> netVariables = new HashMap<String, String>();
-    private List<WorkItem> runningWorkItems = new ArrayList<WorkItem>();
+    private Map<String, String> netVariables = new HashMap<>();
+    private List<WorkItem> runningWorkItems = new ArrayList<>();
     private String caseID;
     private String specID;
 
@@ -52,11 +52,11 @@ public class NetRunner extends org.openxdata.workflow.engine.persistent.Abstract
         this.specID = specID;
     }
 
-    public List<WorkItem> getWorkitems() {
+    public List<WorkItem> getWorkItems() {
         return runningWorkItems;
     }
 
-    public void setWorkitems(List<WorkItem> workItems) {
+    public void setWorkItems(List<WorkItem> workItems) {
         this.runningWorkItems = workItems;
     }
 

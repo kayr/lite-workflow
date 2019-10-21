@@ -67,7 +67,6 @@ public class Variable implements IdPersistent {
 
 	public void copyToNetVariable() {
 		if (!isOutput()) {
-			return;
 		}
 	}
 

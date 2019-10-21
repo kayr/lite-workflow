@@ -64,16 +64,14 @@ public abstract class Junction implements Persistent {
 
 	public void setRootNet(Net rootNet) {
 		this.rootNet = rootNet;
-		for (int i = 0; i < flows.size(); i++) {
-			Flow flow = flows.get(i);
+		for (Flow flow : flows) {
 			flow.setRootNet(rootNet);
 		}
 	}
 
 	public List<Task> getAllNextTasks() {
 		List<Task> tasks = new ArrayList<>();
-		for (int i = 0; i < flows.size(); i++) {
-			Flow flow = flows.get(i);
+		for (Flow flow : flows) {
 			tasks.add(flow.getNextElement());
 		}
 		return tasks;

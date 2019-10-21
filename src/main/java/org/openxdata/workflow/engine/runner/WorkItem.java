@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class WorkItem {
 
-	private Map<String, String> parameters = new HashMap<String, String>(0);
+	private Map<String, String> parameters = new HashMap<>(0);
 	private String caseID;
 	private String taskID;
 	private boolean submitted;

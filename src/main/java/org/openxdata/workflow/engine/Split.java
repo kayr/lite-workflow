@@ -14,7 +14,7 @@ public class Split extends Junction {
 			return getAllNextTasks();
 		}
 		List<Flow> outFlows = getFlows();
-		List<Task> tasks = new ArrayList<Task>(0);
+		List<Task> tasks = new ArrayList<>(0);
 		for (Flow flow : outFlows) {
 			if (flow.isFlowAllowed()) {
 				tasks.add(flow.getNextElement());

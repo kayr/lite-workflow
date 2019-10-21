@@ -13,9 +13,9 @@ import java.util.*;
  */
 public class Net extends Element {
 
-	private List<Flow> outFlows = new ArrayList<Flow>(0);
-	private Map<String, Task> netTasks = new HashMap<String, Task>(0);
-	private Map<String, String> extendAttributes = new HashMap<String, String>();
+	private List<Flow> outFlows = new ArrayList<>(0);
+	private Map<String, Task> netTasks = new HashMap<>(0);
+	private Map<String, String> extendAttributes = new HashMap<>();
 	private Task.STATE status = Task.STATE.DISABLED;
 
 	private final Task startTask = new Task("START", "__start__");
@@ -41,10 +41,8 @@ public class Net extends Element {
 	}
 
 	public List<Task> getCurrentEnabledTasks() {
-		List<Task> tasks = new ArrayList<Task>(0);
-		Iterator<Task> tasksEn = netTasks.values().iterator();
-		while (tasksEn.hasNext()) {
-			Task task = tasksEn.next();
+		List<Task> tasks = new ArrayList<>(0);
+		for (Task task : netTasks.values()) {
 			if (task.getStatus() == Task.STATE.ENABLED) {
 				tasks.add(task);
 			}
@@ -54,7 +52,7 @@ public class Net extends Element {
 
 	public List<Task> getTasks(Task.STATE status) {
 		Iterator<Task> tasksEn = netTasks.values().iterator();
-		List<Task> tasks = new ArrayList<Task>(0);
+		List<Task> tasks = new ArrayList<>(0);
 		while (tasksEn.hasNext()) {
 			Task task = tasksEn.next();
 			if (task.getStatus() == status) {
@@ -104,8 +102,7 @@ public class Net extends Element {
 		if ((nextTasks.isEmpty() || isAllComplete(nextTasks)) && !hasEnabledTasks()) {
 			status = Task.STATE.COMPLETE;
 		}
-		for (int j = 0; j < nextTasks.size(); j++) {
-			Task nextTask = nextTasks.get(j);
+		for (Task nextTask : nextTasks) {
 			enableTask(nextTask);
 		}
 	}
@@ -128,11 +125,9 @@ public class Net extends Element {
 
 	@Override
 	public String toString() {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		buff.append("Net: ").append(getId()).append("\n");
-		Iterator<Task> netTasksEnm = netTasks.values().iterator();
-		while (netTasksEnm.hasNext()) {
-			Task task = netTasksEnm.next();
+		for (Task task : netTasks.values()) {
 			buff.append(task.toString()).append("\n");
 
 		}
@@ -176,8 +171,7 @@ public class Net extends Element {
 		status = Task.STATE.valueOf(dis.readUTF());
 		extendAttributes = PersistentHelper.read(dis);
 
-		for (int i = 0; i < outFlows.size(); i++) {
-			Flow flow = outFlows.get(i);
+		for (Flow flow : outFlows) {
 			flow.setRootNet(this);
 		}
 

@@ -105,12 +105,11 @@ public class Task extends Element {
 
 	@Override
 	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("Task[").append(getId()).append("]{");
-		buffer.append(split.toString()).append('}');
 
 
-		return buffer.toString();
+		String buffer = "Task[" + getId() + "]{" +
+				split.toString() + '}';
+		return buffer;
 	}
 
 	public List<Task> getNextTasksInExec() {

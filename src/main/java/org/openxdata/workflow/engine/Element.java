@@ -12,8 +12,8 @@ import java.util.*;
  */
 public class Element extends org.openxdata.workflow.engine.persistent.AbstractRecord implements IdPersistent {
 
-    private Map<String, Variable> variablesTable = new HashMap<String, Variable>(0);
-    private List<Mapping> mappings = new ArrayList<Mapping>(0);
+    private Map<String, Variable> variablesTable = new HashMap<>(0);
+    private List<Mapping> mappings = new ArrayList<>(0);
     private Net rootNet;
     private String id;
 
@@ -42,8 +42,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     }
 
     public boolean containInputMappingForVariable(String varName) {
-        for (int i = 0; i < mappings.size(); i++) {
-            Mapping mapping = mappings.get(i);
+        for (Mapping mapping : mappings) {
             if (mapping.getFlow() == Variable.FLOW.INPUT && mapping.getTaskVarId().equals(varName)) {
                 return true;
             }
@@ -72,8 +71,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     }
 
     public void processInputMappings() {
-        for (int i = 0; i < mappings.size(); i++) {
-            Mapping mapping = mappings.get(i);
+        for (Mapping mapping : mappings) {
             if (mapping.getFlow() == Variable.FLOW.INPUT) {
                 mapping.performInputCopy();
             }
@@ -81,8 +79,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     }
 
     public void processOutputMappings() {
-        for (int i = 0; i < mappings.size(); i++) {
-            Mapping mapping = mappings.get(i);
+        for (Mapping mapping : mappings) {
             if (mapping.getFlow() == Variable.FLOW.OUTPUT) {
                 mapping.performOutputCopy();
             }
@@ -154,8 +151,7 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
 
     public void setRootNet(Net rootNet) {
         this.rootNet = rootNet;
-        for (int i = 0; i < mappings.size(); i++) {
-            Mapping mapping = mappings.get(i);
+        for (Mapping mapping : mappings) {
             mapping.setRootNet(rootNet);
         }
     }
