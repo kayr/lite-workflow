@@ -68,7 +68,7 @@ public class NetRunner extends org.openxdata.workflow.engine.persistent.Abstract
     }
 
     public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
-        netVariables = PersistentHelper.read(dis);
+        netVariables = PersistentHelper.readMap(dis);
         runningWorkItems = PersistentHelper.read(dis, WorkItem.class);
         caseID = dis.readUTF();
         specID = dis.readUTF();

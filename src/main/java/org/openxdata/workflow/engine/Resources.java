@@ -11,6 +11,8 @@ public class Resources {
 	public static Net getNet() {
 
 		Net instance = new Net();
+
+
 		instance.setId("SampleNet");
 		Task enterdetails = new Task("EnterDetails", "enterdetails");
 		instance.addFlow().forFlowingIntoTask(enterdetails).

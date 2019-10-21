@@ -161,13 +161,13 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     }
 
     public void write(DataOutputStream dos) throws IOException {
-        Util.writeToStream(dos, variablesTable);
+        StreamUtil.writeToStream(dos, variablesTable);
         PersistentHelper.write(mappings, dos);
         dos.writeUTF(id);
     }
 
     public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
-        variablesTable = Util.readFromStrem(dis, Variable.class);
+        variablesTable = StreamUtil.readFromStream(dis, Variable.class);
         mappings = PersistentHelper.read(dis, Mapping.class);
         id = dis.readUTF();
     }

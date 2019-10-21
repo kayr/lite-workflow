@@ -1,10 +1,11 @@
 package org.openxdata.workflow.engine;
 
+import org.openxdata.workflow.engine.persistent.Persistent;
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import org.openxdata.workflow.engine.persistent.Persistent;
-import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -105,7 +106,7 @@ public class Flow implements Persistent {
 	}
 
 	public String toString() {
-		return "Flow: " + previousTaskName + " -> " + nextTaskName;
+		return "(:" + previousTaskName + ")->(:" + nextTaskName + ")";
 
 	}
 

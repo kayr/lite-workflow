@@ -13,7 +13,6 @@ import java.util.*;
  */
 public class Net extends Element {
 
-	private List<Flow> outFlows = new ArrayList<>(0);
 	private Map<String, Task> netTasks = new HashMap<>(0);
 	private Map<String, String> extendAttributes = new HashMap<>();
 	private Task.STATE status = Task.STATE.DISABLED;
@@ -21,23 +20,17 @@ public class Net extends Element {
 	private final Task startTask = new Task("START", "__start__");
 	private final Task endTask = new Task("START", "__end__");
 
-	public void addFlow(Flow e) {
-		outFlows.add(e);
+	public Net() {
+		startTask.setRootNet(this);
+		endTask.setRootNet(this);
 	}
 
 	public List<Flow> getOutFlows() {
-		return outFlows;
-	}
-
-	public void setOutFlows(List<Flow> outFlows) {
-		this.outFlows = outFlows;
+		return startTask.getOutFlows();
 	}
 
 	public Flow addFlow() {
-		Flow flow = new Flow();
-		flow.setRootNet(this);
-		outFlows.add(flow);
-		return flow;
+		return startTask.addOutFlow();
 	}
 
 	public List<Task> getCurrentEnabledTasks() {
@@ -64,10 +57,9 @@ public class Net extends Element {
 
 	public void start() {
 		status = Task.STATE.ENABLED;
-		for (Flow flow : outFlows) {
+		for (Flow flow : startTask.getOutFlows()) {
 			Task task = flow.getNextElement();
 			enableTask(task);
-
 		}
 	}
 
@@ -150,15 +142,15 @@ public class Net extends Element {
 		return extendAttributes;
 	}
 
-	public void setExtendAttributes(HashMap<String, String> extendAttributes) {
+	public void setExtendAttributes(Map<String, String> extendAttributes) {
 		this.extendAttributes = extendAttributes;
 	}
 
 	@Override
 	public void write(DataOutputStream dos) throws IOException {
 		super.write(dos);
-		PersistentHelper.write(outFlows, dos);
-		Util.writeToStream(dos, netTasks);
+		startTask.write(dos);
+		StreamUtil.writeToStream(dos, netTasks);
 		dos.writeUTF(status.name());
 		PersistentHelper.write(extendAttributes, dos);
 	}
@@ -166,12 +158,12 @@ public class Net extends Element {
 	@Override
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		super.read(dis);
-		outFlows = PersistentHelper.read(dis, Flow.class);
-		netTasks = Util.readFromStrem(dis,  Task.class);
+		startTask.read(dis);
+		netTasks = StreamUtil.readFromStream(dis,  Task.class);
 		status = Task.STATE.valueOf(dis.readUTF());
-		extendAttributes = PersistentHelper.read(dis);
+		extendAttributes = PersistentHelper.readMap(dis);
 
-		for (Flow flow : outFlows) {
+		for (Flow flow : startTask.getOutFlows()) {
 			flow.setRootNet(this);
 		}
 

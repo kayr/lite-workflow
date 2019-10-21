@@ -1,9 +1,12 @@
 package org.openxdata.workflow.engine;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static org.openxdata.workflow.engine.Util.*;
+import static org.openxdata.workflow.engine.StreamUtil.copyNet;
 
 /**
  * Hello world!
@@ -103,23 +106,25 @@ public class App {
 				net.complete(task);
 				str += "," + task.getId();
 				numTask++;
-				err.println("[ERROR] NetVariables: " + net.getVariablesTable());
+				err.println("    NetVariables: " + net.getVariablesTable().values());
 			}
 		}
 
-		out.println("[ERROR] Workflow End");
+		out.println(" Workflow End");
 		out.println(numTask + " Tasks (" + str + ")");
 	}
+
+	private static AtomicLong count = new AtomicLong();
 
 	private static void executeTask(Element task) {
 		Map<String, Variable> variablesTable = task.getVariablesTable();
 
-		System.out.println("\n[ERROR] !!!=====Task: " + task.getId() + " (" + task.getId() + ")");
-		out.println("=====  " + task + " ======");
+		System.out.println("\n " + count.incrementAndGet() + ": Task: " + task.getId() + " (" + task.toString() + ")");
+		out.println("-----------------------------");
 
 		for (Variable variable : variablesTable.values()) {
 			if (variable.isInput()) {
-				System.out.println("\t" + variable.getName() + "=" + variable.getValue());
+				System.out.println("    ++ " + variable.getName() + "=" + variable.getValue());
 			}
 		}
 
@@ -127,7 +132,7 @@ public class App {
 			if ((!variable.isOutput() && !(task instanceof Net)) || (task instanceof Net && variable.isOutput())) {
 				continue;
 			}
-			out.print("\t" + variable.getId() + ": ");
+			out.print("    " + variable.getId() + ": ");
 			variable.setValue(scanner.nextLine());
 		}
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import static org.openxdata.workflow.engine.Util.*;
+import static org.openxdata.workflow.engine.StreamUtil.*;
 
 /**
  *
@@ -71,7 +71,7 @@ public class NetTest extends TestCase {
 
 	public void testNumberOfTasksIsFour() {
 		Map<String, Task> netTasks = instance.getNetTasks();
-		assertEquals(4, netTasks.size());
+		assertEquals(6, netTasks.size()); //six including start and end
 	}
 
 	public void testWorkFlowFlowsSmoothly() {

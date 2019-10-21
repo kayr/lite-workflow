@@ -1,10 +1,11 @@
 package org.openxdata.workflow.engine;
 
+import org.openxdata.workflow.engine.persistent.PersistentHelper;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
-import org.openxdata.workflow.engine.persistent.PersistentHelper;
 
 /**
  *
@@ -105,11 +106,7 @@ public class Task extends Element {
 
 	@Override
 	public String toString() {
-
-
-		String buffer = "Task[" + getId() + "]{" +
-				split.toString() + '}';
-		return buffer;
+		return split.toString();
 	}
 
 	public List<Task> getNextTasksInExec() {

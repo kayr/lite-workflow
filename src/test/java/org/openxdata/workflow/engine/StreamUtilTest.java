@@ -14,7 +14,7 @@ import junit.framework.TestCase;
  *
  * @author kay
  */
-public class UtilTest extends TestCase {
+public class StreamUtilTest extends TestCase {
 
 	Hashtable<String, IdPersistent> table = new Hashtable<String, IdPersistent>(0);
 
@@ -36,7 +36,7 @@ public class UtilTest extends TestCase {
 	 */
 	public void testReadFromStrem() throws Exception {
 		DataInputStream din = getInputStream();
-		Map result = Util.readFromStrem(din, TestClass.class);
+		Map result = StreamUtil.readFromStream(din, TestClass.class);
 		assertEquals(3, result.size());
 
 	}
@@ -44,7 +44,7 @@ public class UtilTest extends TestCase {
 	public void testReadFromStremEmptyTable() throws Exception {
 		table.clear();
 		DataInputStream din = getInputStream();
-		Map result = Util.readFromStrem(din, TestClass.class);
+		Map result = StreamUtil.readFromStream(din, TestClass.class);
 		assertEquals(0, result.size());
 
 	}
@@ -52,7 +52,7 @@ public class UtilTest extends TestCase {
 	public void testReadFromStremNullTable() throws Exception {
 		table = null;
 		DataInputStream din = getInputStream();
-		Map result = Util.readFromStrem(din, TestClass.class);
+		Map result = StreamUtil.readFromStream(din, TestClass.class);
 		assertEquals(0, result.size());
 
 	}
@@ -60,7 +60,7 @@ public class UtilTest extends TestCase {
 	private DataInputStream getInputStream() throws IOException {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);
-		Util.writeToStream(dout, table);
+		StreamUtil.writeToStream(dout, table);
 		DataInputStream din = new DataInputStream(new ByteArrayInputStream(bout.toByteArray()));
 		return din;
 	}

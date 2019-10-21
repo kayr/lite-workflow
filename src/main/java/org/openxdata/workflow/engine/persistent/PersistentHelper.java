@@ -327,11 +327,9 @@ public class PersistentHelper {
 	 * @return - the hashtable of string keys and values or null if none.
 	 * @throws IOException - thrown when a problem occurs during the reading from stream.
 	*/
-	public static HashMap read(DataInputStream dis) throws IOException {
+	public static Map<String,String> readMap(DataInputStream dis) throws IOException {
 		
 		byte len = dis.readByte();
-		/*if(len == 0)
-			return null;*/
 
 		HashMap stringHashMap = new HashMap();
 

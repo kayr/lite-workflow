@@ -11,7 +11,10 @@ import java.util.Map;
  *
  * @author kay
  */
-public class Util {
+public class StreamUtil {
+
+	private StreamUtil() {
+	}
 
 	public static void writeToStream(DataOutputStream out, Map<String, ? extends IdPersistent> table) throws IOException {
 
@@ -25,7 +28,7 @@ public class Util {
 		}
 	}
 
-	public static <T extends IdPersistent> Map<String, T> readFromStrem(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
+	public static <T extends IdPersistent> Map<String, T> readFromStream(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
 		Map<String, T> table = new HashMap<>();
 		short len = din.readShort();
 
@@ -40,7 +43,6 @@ public class Util {
 	}
 
 	public static Net copyNet(Net net) throws IllegalAccessException, InstantiationException, IOException {
-		System.out.println("Copying net" + net.getId());
 		DataInputStream din = getInputStream(net);
 
 		Net copy = new Net();
