@@ -308,8 +308,7 @@ public class NetTest extends TestCase {
 		currentEnabledTasks = instance.getCurrentEnabledTasks();
 		assertEquals(2, currentEnabledTasks.size());
 
-		for (int i = 0; i < currentEnabledTasks.size(); i++) {
-			Task task = currentEnabledTasks.get(i);
+		for (Task task : currentEnabledTasks) {
 			if (task.getId().equals("Maternal_Info_6")) {
 				task.setValue("Pregnancy", "true");
 				completeTask(task);

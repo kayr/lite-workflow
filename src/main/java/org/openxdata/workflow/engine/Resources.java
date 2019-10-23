@@ -39,6 +39,8 @@ public class Resources {
 
 		ispregnant.addOutFlow().forFlowingIntoTask(confirm);
 
+		confirm.addFlowToEnd();
+
 		return instance;
 
 	}
@@ -98,6 +100,8 @@ public class Resources {
 		Task finish = updateRegister.addOutFlow().
 			forFlowingIntoNewTask("Finish", "finish").
 			havingJoinType(Junction.TYPE.AND);
+
+		finish.addFlowToEnd();
 
 		childInfo.addOutFlow().forFlowingIntoTask(finish);
 		maternalInfo.addOutFlow().forFlowingIntoTask(finish);

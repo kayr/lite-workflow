@@ -18,7 +18,7 @@ public class Net extends Element {
 	private Task.STATE status = Task.STATE.DISABLED;
 
 	private final Task startTask = new Task("START", "__start__");
-	private final Task endTask = new Task("START", "__end__");
+	private final Task endTask = new Task("END", "__end__");
 
 	public Net() {
 		startTask.setRootNet(this);
@@ -75,9 +75,13 @@ public class Net extends Element {
 			netTask.getVariable(varId).setValue(varValue);
 		}
 		netTask.processOutputMappings();
-		netTask.setStatus(Task.STATE.COMPLETE);
+		netTask.setStatus(Task.STATE.DISABLED);
 		enableNextTasks(netTask);
 		return netTask;
+	}
+
+	private boolean isEndTask(Task task) {
+		return task == endTask;
 	}
 
 	protected void enableTask(Task nextTask) {
@@ -91,11 +95,17 @@ public class Net extends Element {
 
 	protected void enableNextTasks(Task submitTask) {
 		List<Task> nextTasks = submitTask.getNextTasksInExec();
-		if ((nextTasks.isEmpty() || isAllComplete(nextTasks)) && !hasEnabledTasks()) {
+		if (nextTasks.isEmpty()) {
 			status = Task.STATE.COMPLETE;
 		}
+
 		for (Task nextTask : nextTasks) {
-			enableTask(nextTask);
+			if (isEndTask(nextTask)) {
+				status = Task.STATE.COMPLETE;
+				break;
+			} else {
+				enableTask(nextTask);
+			}
 		}
 	}
 
@@ -117,12 +127,31 @@ public class Net extends Element {
 
 	@Override
 	public String toString() {
+		int i = 1;
 		StringBuilder buff = new StringBuilder();
-		buff.append("Net: ").append(getId()).append("\n");
-		for (Task task : netTasks.values()) {
-			buff.append(task.toString()).append("\n");
+		buff.append("   Net: ").append(getId()).append("\n");
 
+		List<Task> visited = new ArrayList<>();
+
+		Deque<Flow> dq = new ArrayDeque<>(startTask.getOutFlows());
+
+		while (!dq.isEmpty()) {
+			Flow curr = dq.poll();
+			buff.append(i++).append(": ").append(curr.toString()).append("\n");
+
+			Task nextElement = curr.getNextElement();
+			List<Flow> outFlows = nextElement.getOutFlows();
+
+			if(visited.contains(nextElement)) continue;
+
+			if (outFlows.isEmpty() ) {
+				buff.append(i++).append(": ").append(nextElement.toString()).append("\n");
+			} else {
+				dq.addAll(outFlows);
+			}
+			visited.add(nextElement);
 		}
+
 		return buff.toString();
 	}
 
@@ -189,5 +218,13 @@ public class Net extends Element {
 		}
 		return true;
 
+	}
+
+	public Task getStartTask() {
+		return startTask;
+	}
+
+	public Task getEndTask() {
+		return endTask;
 	}
 }

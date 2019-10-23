@@ -80,6 +80,13 @@ public class Task extends Element {
 		return flow;
 	}
 
+	public Flow addFlowToEnd() {
+		Flow flow = addOutFlow();
+		split.setType(Junction.TYPE.XOR);
+		flow.forFlowingIntoTask(getRootNet().getEndTask());
+		return flow;
+	}
+
 	public Flow addAndOutFlow() {
 		Flow flow = addOutFlow();
 		split.setType(Junction.TYPE.AND);
@@ -106,6 +113,9 @@ public class Task extends Element {
 
 	@Override
 	public String toString() {
+		if (split.getFlows().isEmpty()) {
+			return "(:" + getId() + ")";
+		}
 		return split.toString();
 	}
 
@@ -149,6 +159,10 @@ public class Task extends Element {
 	}
 
 	boolean isComplete() {
+		return status == STATE.COMPLETE;
+	}
+
+	boolean isCompleteOrDisabled() {
 		return status == STATE.COMPLETE;
 	}
 }
