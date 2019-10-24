@@ -13,7 +13,7 @@ public class Join extends Junction {
 		if (isAND()) {
 			List<Flow> inFlows = getFlows();
 			for (Flow flow : inFlows) {
-				if (!flow.getPreviousElement().isComplete()) {
+				if (!flow.getPreviousElement().isCompleteOrDisabled()) {
 					return false;
 				}
 			}

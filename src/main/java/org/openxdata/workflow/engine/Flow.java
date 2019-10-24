@@ -19,6 +19,7 @@ public class Flow implements Persistent {
 	private String nextTaskName;
 	private String previousTaskName;
 	private Condition condition;
+	private Junction parentJunction;
 
 	public Flow() {
 	}
@@ -105,8 +106,22 @@ public class Flow implements Persistent {
 		return previousTaskName;
 	}
 
+	public String toString(Junction.TYPE type) {
+		if (condition == null)
+			return String.format("(:%s)-[:%s]->(:%s)", previousTaskName, type.name(), nextTaskName);
+		else
+			return String.format("(:%s)-[:%s {c: %s}]->(:%s)", previousTaskName, type.name(), condition.toString(), nextTaskName);
+
+
+	}
 	public String toString() {
-		return "(:" + previousTaskName + ")->(:" + nextTaskName + ")";
+		if (parentJunction != null)
+			return toString(parentJunction.getType());
+		else if (condition == null)
+			return "(:" + previousTaskName + ")->(:" + nextTaskName + ")";
+		else
+			return "(:" + previousTaskName + ")-[" + condition.toString() + "]->(:" + nextTaskName + ")";
+
 
 	}
 
@@ -137,5 +152,9 @@ public class Flow implements Persistent {
 			condition = new Condition();
 			condition.read(dis);
 		}
+	}
+
+	public void setParentJunction(Junction parentJunction) {
+		this.parentJunction = parentJunction;
 	}
 }

@@ -1,6 +1,6 @@
 package org.openxdata.workflow.engine;
 
-import static org.openxdata.workflow.engine.Variable.*;
+import static org.openxdata.workflow.engine.Variable.FLOW;
 
 /**
  *

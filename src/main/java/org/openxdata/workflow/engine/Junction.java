@@ -15,13 +15,19 @@ import java.util.List;
  */
 public abstract class Junction implements Persistent {
 
+	public Junction addFlow(Flow flow){
+		flows.add(flow);
+		flow.setParentJunction(this);
+		return this;
+	}
+
 	public enum TYPE {
-		XOR, DIRECT, AND, OR
+		XOR, FORK, AND, OR
 	}
 
 	private List<Flow> flows = new ArrayList<>(0);
 	private Net rootNet;
-	private TYPE type = TYPE.DIRECT;
+	private TYPE type = TYPE.FORK;
 
 	public Junction() {
 	}
@@ -35,7 +41,7 @@ public abstract class Junction implements Persistent {
 	}
 
 	public boolean isDirect() {
-		return TYPE.DIRECT == type;
+		return TYPE.FORK == type;
 	}
 
 	public boolean isXOR() {
@@ -82,7 +88,7 @@ public abstract class Junction implements Persistent {
 		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < flows.size(); i++) {
 			Flow flow = flows.get(i);
-			buffer.append(flow.toString());
+			buffer.append(flow.toString(type));
 			if (i != (flows.size() - 1)) {
 				buffer.append(',');
 			}

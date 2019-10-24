@@ -5,6 +5,7 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ import java.util.List;
  * @author kay
  */
 public class Task extends Element {
+
 
 	public enum STATE{
 		COMPLETE,DISABLED,ENABLED
@@ -76,7 +78,7 @@ public class Task extends Element {
 		Flow flow = new Flow();
 		flow.setPreviousElement(this);
 		flow.setRootNet(getRootNet());
-		split.getFlows().add(flow);
+		split.addFlow(flow);
 		return flow;
 	}
 
@@ -163,6 +165,11 @@ public class Task extends Element {
 	}
 
 	boolean isCompleteOrDisabled() {
-		return status == STATE.COMPLETE;
+		return EnumSet.of(STATE.COMPLETE, STATE.DISABLED).contains(status);
 	}
+
+	public boolean canMoveForward() {
+		return join.areTasksComplete();
+	}
+
 }

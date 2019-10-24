@@ -1,11 +1,12 @@
 package org.openxdata.workflow.engine;
 
+import junit.framework.TestCase;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-import static org.openxdata.workflow.engine.StreamUtil.*;
+import static org.openxdata.workflow.engine.StreamUtil.copyNet;
 
 /**
  *
@@ -53,7 +54,7 @@ public class NetTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		instance = Resources.getNet();
-		System.out.println("Finished Initialising Workflow:\n" + instance.toString());
+//		System.out.println("Finished Initialising Workflow:\n" + instance.toString());
 
 		super.setUp();
 	}
@@ -191,6 +192,8 @@ public class NetTest extends TestCase {
 		//Start the workflow
 		instance.start();
 
+		System.out.println(instance);
+
 
 		//** ====================== Task 1  **//
 		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
@@ -266,6 +269,8 @@ public class NetTest extends TestCase {
 		//************ Check instance is complete ****/
 		currentEnabledTasks = instance.getCurrentEnabledTasks();
 
+		System.out.println(currentEnabledTasks);
+
 		assertTrue("No Tasks Are Expected to be enabled", currentEnabledTasks.isEmpty());
 		assertTrue("Net is expected to be in completed state", instance.isComplete());
 		assertFalse(instance.isStarted());
@@ -283,6 +288,8 @@ public class NetTest extends TestCase {
 		instance.setValue("Age", "25");
 		//Start the workflow
 		instance.start();
+
+		System.out.println(instance);
 
 
 		//** ====================== Task 1  **//
@@ -358,11 +365,14 @@ public class NetTest extends TestCase {
 	private void completeTask(Task enabledTask) {
 		try {
 			instance = copyNet(instance);
-			System.out.println("Completing task: " + enabledTask);
+			System.out.print("Completing task: " + enabledTask);
 			instance.complete(enabledTask);
 			instance = copyNet(instance);
+			System.out.print("\n  -> Next tasks: " + instance.getCurrentEnabledTasks());
 		} catch (Exception ex) {
 			throw new RuntimeException("Unable to copy net: " + ex, ex);
+		}finally {
+			System.out.println();
 		}
 	}
 
@@ -376,6 +386,7 @@ public class NetTest extends TestCase {
 		instance.setValue("Age", "25");
 		//Start the workflow
 		instance.start();
+		System.out.println(instance);
 
 
 		//** ====================== Task 1  **//

@@ -17,12 +17,14 @@ public class Net extends Element {
 	private Map<String, String> extendAttributes = new HashMap<>();
 	private Task.STATE status = Task.STATE.DISABLED;
 
-	private final Task startTask = new Task("START", "__start__");
-	private final Task endTask = new Task("END", "__end__");
+	private Task startTask = new Task("START", "__start__");
+	private Task endTask = new Task("END", "__end__");
 
 	public Net() {
 		startTask.setRootNet(this);
 		endTask.setRootNet(this);
+		addTask(startTask);
+		addTask(endTask);
 	}
 
 	public List<Flow> getOutFlows() {
@@ -34,6 +36,8 @@ public class Net extends Element {
 	}
 
 	public List<Task> getCurrentEnabledTasks() {
+		if (status == Task.STATE.COMPLETE) return Collections.emptyList();
+
 		List<Task> tasks = new ArrayList<>(0);
 		for (Task task : netTasks.values()) {
 			if (task.getStatus() == Task.STATE.ENABLED) {
@@ -76,7 +80,10 @@ public class Net extends Element {
 		}
 		netTask.processOutputMappings();
 		netTask.setStatus(Task.STATE.DISABLED);
-		enableNextTasks(netTask);
+
+		if(task.canMoveForward()) {
+			enableNextTasks(netTask);
+		}
 		return netTask;
 	}
 
@@ -101,6 +108,7 @@ public class Net extends Element {
 
 		for (Task nextTask : nextTasks) {
 			if (isEndTask(nextTask)) {
+				System.out.println("Reached end task");
 				status = Task.STATE.COMPLETE;
 				break;
 			} else {
@@ -178,7 +186,6 @@ public class Net extends Element {
 	@Override
 	public void write(DataOutputStream dos) throws IOException {
 		super.write(dos);
-		startTask.write(dos);
 		StreamUtil.writeToStream(dos, netTasks);
 		dos.writeUTF(status.name());
 		PersistentHelper.write(extendAttributes, dos);
@@ -187,7 +194,6 @@ public class Net extends Element {
 	@Override
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		super.read(dis);
-		startTask.read(dis);
 		netTasks = StreamUtil.readFromStream(dis,  Task.class);
 		status = Task.STATE.valueOf(dis.readUTF());
 		extendAttributes = PersistentHelper.readMap(dis);
@@ -199,25 +205,9 @@ public class Net extends Element {
 		for (Task task : netTasks.values()) {
 			task.setRootNet(this);
 		}
-	}
 
-	private boolean hasEnabledTasks() {
-		for (Task task : netTasks.values()) {
-			if (task.getStatus() == Task.STATE.ENABLED) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isAllComplete(List<Task> tasks) {
-		for (Task task : tasks) {
-			if (!task.isComplete()) {
-				return false;
-			}
-		}
-		return true;
-
+		startTask = getTask(startTask.getId());
+		endTask = getTask(endTask.getId());
 	}
 
 	public Task getStartTask() {

@@ -35,7 +35,6 @@ public class Condition implements org.openxdata.workflow.engine.persistent.Persi
     }
 
     protected String getExpectedValue() {
-        //String rootValue = rootNet.getValue(value);
         return expectedValue;
     }
 
@@ -57,7 +56,13 @@ public class Condition implements org.openxdata.workflow.engine.persistent.Persi
             return false;
         }
 
-        return calctdNetValue.toLowerCase().equals(expValue.toLowerCase());
+        return calctdNetValue.equalsIgnoreCase(expValue);
+    }
+
+
+    @Override
+    public String toString() {
+        return "$" + variableId + " = " + expectedValue;
     }
 
     public void write(DataOutputStream dos) throws IOException {
