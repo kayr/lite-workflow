@@ -1,6 +1,5 @@
 package com.kayr.github.liteworkflow;
 
-import com.kayr.github.liteworkflow.persistent.AbstractRecord;
 import com.kayr.github.liteworkflow.persistent.PersistentHelper;
 
 import java.io.DataInputStream;
@@ -14,7 +13,7 @@ import java.util.Map;
 /**
  * @author kay
  */
-public class Element extends AbstractRecord implements IdPersistent {
+public class Element implements IdPersistent {
 
     private Map<String, Variable> variablesTable = new HashMap<>(0);
     private List<Mapping> mappings = new ArrayList<>(0);
@@ -107,7 +106,6 @@ public class Element extends AbstractRecord implements IdPersistent {
             return this;
         }
 
-        //TODO: handleFor Direct Data Transfer
         forDirectTransfer(variable);
         return this;
 

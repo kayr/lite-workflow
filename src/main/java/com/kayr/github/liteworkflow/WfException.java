@@ -6,9 +6,6 @@ package com.kayr.github.liteworkflow;
  */
 public class WfException extends RuntimeException {
 
-	public WfException() {
-	}
-
 	public WfException(String message) {
 		super(message);
 	}

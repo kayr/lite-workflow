@@ -14,6 +14,9 @@ import java.util.*;
  *
  */
 public class PersistentHelper {
+
+	private PersistentHelper() {
+	}
 	
 	/**
 	 * Writes a string to the stream.
@@ -167,16 +170,6 @@ public class PersistentHelper {
 			dos.writeInt(0);
 	}
 
-	public static void write(List persistentList, DataOutputStream dos, int len) throws IOException {
-		if (persistentList != null) {
-			dos.writeInt(persistentList.size());
-			for (Object o : persistentList) {
-				((Persistent) o).write(dos);
-			}
-		}
-		else
-			dos.writeInt(0);
-	}
 
 	public static void writeIntegers(List intList, DataOutputStream dos) throws IOException {
 		if (intList != null) {

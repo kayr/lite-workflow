@@ -27,8 +27,6 @@ public class Net extends Element {
 		return igGen.incrementAndGet();
 	}
 
-	public Net() {
-	}
 
 	public List<Flow> getOutFlows() {
 		return getStartTask().getOutFlows();

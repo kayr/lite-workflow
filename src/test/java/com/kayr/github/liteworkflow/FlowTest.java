@@ -34,6 +34,8 @@ public class FlowTest extends TestCase {
 		Flow in = new Flow();
 		in.read(new DataInputStream(new ByteArrayInputStream(bout.toByteArray())));
 
+		assertEquals(in.getNextTaskName(),instance.getNextTaskName());
+		assertEquals(in.getPreviousTaskName(),instance.getPreviousTaskName());
 
 	}
 

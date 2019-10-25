@@ -12,6 +12,9 @@ import java.io.*;
  */
 public class Serializer {
 
+	private Serializer() {
+	}
+
 	/**
 	 * Converts a peristent object to an array of bytes.
 	 * 
@@ -31,10 +34,7 @@ public class Serializer {
 	 * 
 	 * @param data the byte array.
 	 * @param cls the concrete class implementing the persistent interface.
-	 * @return
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
+	 * @return the instance of the class
 	 */
 	public static <T extends Persistent> T deserialize(byte[] data, Class<T> cls) throws IOException, IllegalAccessException, InstantiationException {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));

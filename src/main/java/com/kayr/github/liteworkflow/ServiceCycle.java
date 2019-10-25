@@ -28,7 +28,7 @@ public class ServiceCycle {
 
 		dryingSMS.addOutFlow().withEqualCondition("is_pregnant", "no").forFlowingIntoTask(smeOne);
 
-		Task steamingSms = dryingSMS.addOutFlow().forFlowingIntoNewTask("Steaming", "steaming");
+		dryingSMS.addOutFlow().forFlowingIntoNewTask("Steaming", "steaming");
 
 		return net;
 	}

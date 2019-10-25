@@ -42,8 +42,8 @@ public class Mapping implements Persistent {
 	public void performOutputCopy() {
 		Task task1 = getTask();
 		String taskValue = task1.getValue(taskVarId);
-		Variable netVariable = rootNet.getVariable(this.netVariable);
-		netVariable.setValue(taskValue);
+		Variable variable = rootNet.getVariable(this.netVariable);
+		variable.setValue(taskValue);
 	}
 
 	public void setRootNet(Net rootNet) {

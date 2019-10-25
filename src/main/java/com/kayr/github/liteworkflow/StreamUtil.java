@@ -2,7 +2,6 @@ package com.kayr.github.liteworkflow;
 
 import com.kayr.github.liteworkflow.persistent.Serializer;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

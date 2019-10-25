@@ -30,7 +30,7 @@ public class Variable implements IdPersistent {
 	}
 
 	public String getName() {
-		return name;
+		return getId();
 	}
 
 	public void setName(String name) {
@@ -41,8 +41,8 @@ public class Variable implements IdPersistent {
 		return flow;
 	}
 
-	public void setFlow(FLOW FLOW) {
-		this.flow = FLOW;
+	public void setFlow(FLOW flow) {
+		this.flow = flow;
 	}
 
 	public String getValue() {
@@ -65,16 +65,12 @@ public class Variable implements IdPersistent {
 		return flow == FLOW.IO;
 	}
 
-	public void copyToNetVariable() {
-		if (!isOutput()) {
-		}
-	}
-
 	@Override
 	public String toString() {
 		return name + "=" + value;
 	}
 
+	@Override
 	public String getId() {
 		return name;
 	}
