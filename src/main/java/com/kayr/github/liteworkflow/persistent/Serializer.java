@@ -1,10 +1,6 @@
 package com.kayr.github.liteworkflow.persistent;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 
 /**
@@ -40,9 +36,9 @@ public class Serializer {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public static Persistent deserialize(byte[] data, Class cls) throws IOException,IllegalAccessException,InstantiationException {
+	public static <T extends Persistent> T deserialize(byte[] data, Class<T> cls) throws IOException, IllegalAccessException, InstantiationException {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
-		Persistent perst = (Persistent) cls.newInstance();
+		T perst = cls.newInstance();
 		perst.read(dis);
 		return perst;
 	}

@@ -36,7 +36,7 @@ public class StreamUtilTest extends TestCase {
 	 */
 	public void testReadFromStrem() throws Exception {
 		DataInputStream din = getInputStream();
-		Map result = StreamUtil.readFromStream(din, TestClass.class);
+		Map result = StreamUtil.readMap(din, TestClass.class);
 		assertEquals(3, result.size());
 
 	}
@@ -44,7 +44,7 @@ public class StreamUtilTest extends TestCase {
 	public void testReadFromStremEmptyTable() throws Exception {
 		table.clear();
 		DataInputStream din = getInputStream();
-		Map result = StreamUtil.readFromStream(din, TestClass.class);
+		Map result = StreamUtil.readMap(din, TestClass.class);
 		assertEquals(0, result.size());
 
 	}
@@ -52,7 +52,7 @@ public class StreamUtilTest extends TestCase {
 	public void testReadFromStremNullTable() throws Exception {
 		table = null;
 		DataInputStream din = getInputStream();
-		Map result = StreamUtil.readFromStream(din, TestClass.class);
+		Map result = StreamUtil.readMap(din, TestClass.class);
 		assertEquals(0, result.size());
 
 	}
@@ -60,7 +60,7 @@ public class StreamUtilTest extends TestCase {
 	private DataInputStream getInputStream() throws IOException {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);
-		StreamUtil.writeToStream(dout, table);
+		StreamUtil.writeMap(dout, table);
 		DataInputStream din = new DataInputStream(new ByteArrayInputStream(bout.toByteArray()));
 		return din;
 	}

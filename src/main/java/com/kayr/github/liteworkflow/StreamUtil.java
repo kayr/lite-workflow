@@ -18,7 +18,7 @@ public class StreamUtil {
 	private StreamUtil() {
 	}
 
-	public static void writeToStream(DataOutputStream out, Map<String, ? extends IdPersistent> table) throws IOException {
+	public static void writeMap(DataOutputStream out, Map<String, ? extends IdPersistent> table) throws IOException {
 
 		if (table != null) {
 			out.writeShort(table.size());
@@ -30,12 +30,12 @@ public class StreamUtil {
 		}
 	}
 
-	public static <T extends IdPersistent> Map<String, T> readFromStream(DataInputStream din, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
+	public static <T extends IdPersistent> Map<String, T> readMap(DataInputStream din, Class<T> clazz) throws IOException, InstantiationException, IllegalAccessException {
 		Map<String, T> table = new HashMap<>();
 		short len = din.readShort();
 
 		for (short i = 0; i < len; i++) {
-			T obj = (T) clazz.newInstance();
+			T obj = clazz.newInstance();
 			obj.read(din);
 			table.put(obj.getId(), obj);
 		}
@@ -45,15 +45,8 @@ public class StreamUtil {
 	}
 
 	public static Net copyNet(Net net) throws IllegalAccessException, InstantiationException, IOException {
-		DataInputStream din = getInputStream(net);
-
-		Net copy = new Net();
-		copy.read(din);
-		return copy;
+		final byte[] serialize = Serializer.serialize(net);
+		return Serializer.deserialize(serialize,Net.class);
 	}
 
-	public static DataInputStream getInputStream(Element elem) throws IOException {
-		byte[] bytes = Serializer.serialize(elem);
-		return new DataInputStream(new ByteArrayInputStream(bytes));
-	}
 }

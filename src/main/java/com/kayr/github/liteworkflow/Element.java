@@ -173,13 +173,13 @@ public class Element extends AbstractRecord implements IdPersistent {
     }
 
     public void write(DataOutputStream dos) throws IOException {
-        StreamUtil.writeToStream(dos, variablesTable);
+        StreamUtil.writeMap(dos, variablesTable);
         PersistentHelper.write(mappings, dos);
         dos.writeUTF(id);
     }
 
     public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
-        variablesTable = StreamUtil.readFromStream(dis, Variable.class);
+        variablesTable = StreamUtil.readMap(dis, Variable.class);
         mappings = PersistentHelper.read(dis, Mapping.class);
         id = dis.readUTF();
     }

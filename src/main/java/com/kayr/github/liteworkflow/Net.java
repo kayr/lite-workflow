@@ -188,7 +188,7 @@ public class Net extends Element {
 	@Override
 	public void write(DataOutputStream dos) throws IOException {
 		super.write(dos);
-		StreamUtil.writeToStream(dos, netTasks);
+		StreamUtil.writeMap(dos, netTasks);
 		dos.writeUTF(status.name());
 		PersistentHelper.write(extendAttributes, dos);
 	}
@@ -196,7 +196,7 @@ public class Net extends Element {
 	@Override
 	public void read(DataInputStream dis) throws IOException, InstantiationException, IllegalAccessException {
 		super.read(dis);
-		netTasks = StreamUtil.readFromStream(dis,  Task.class);
+		netTasks = StreamUtil.readMap(dis,  Task.class);
 		status = Task.STATE.valueOf(dis.readUTF());
 		extendAttributes = PersistentHelper.readMap(dis);
 
