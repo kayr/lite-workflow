@@ -385,6 +385,8 @@ public class NetTest extends TestCase {
 	public void testNetDoesNotEndPrematurely() {
 		instance = Resources.getNetWithAnd1();
 
+		System.out.println(Cypher.generate(instance));
+
 		instance.getTask("finish").withJoinType(Junction.TYPE.OR);
 		instance.setValue("Name", "tonny");
 		instance.setValue("village", "Kiwatule");

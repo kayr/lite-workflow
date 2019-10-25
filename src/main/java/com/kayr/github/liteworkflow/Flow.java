@@ -163,4 +163,8 @@ public class Flow implements Persistent {
 	public void setParentJunction(Junction parentJunction) {
 		this.parentJunction = parentJunction;
 	}
+
+	public Junction getParentJunction() {
+		return parentJunction;
+	}
 }
