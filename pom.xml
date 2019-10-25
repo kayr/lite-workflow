@@ -21,30 +21,9 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.openxdata</groupId>
-			<artifactId>openxdata-wf-mobile-model</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<repositories>
-		<repository>
-			<id>kayprivate.repo.snapshots</id>
-			<url>https://dl.dropbox.com/u/3038882/p/pm2/snapshots</url>
-		</repository>
-		<repository>
-			<id>kayprivate.repo.releases</id>
-			<url>https://dl.dropbox.com/u/3038882/p/pm2/releases</url>
-		</repository>
-    
-		<repository>
-			<id>kayr.repo.snapshots</id>
-			<url>https://dl.dropbox.com/u/3038882/p/m2/snapshots</url>
-		</repository>
-		<repository>
-			<id>kayr.repo.releases</id>
-			<url>https://dl.dropbox.com/u/3038882/p/m2/releases</url>
-		</repository>
+
 	</repositories>
     
 	<distributionManagement>
@@ -65,38 +44,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>retrotranslator-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>translate</goal>
-						</goals>
-						<configuration>
-							<filesets>
-								<fileset>
-									<directory>${project.build.outputDirectory}</directory>
-									<includes>
-										<include>**/*.class</include>
-									</includes>
-								</fileset>
-							</filesets>
-							<verify>true</verify>
-							<verifyClasspath>
-								<element>${env.WTK_HOME}/lib/cldcapi11.jar</element>
-								<element>${user.home}/.m2/repository/org/openxdata/openxdata-wf-mobile-model/1.0/openxdata-wf-mobile-model-1.0.jar</element>
-								<element>${user.home}/.m2/repository/org/openxdata/openxdata-mobile-model/1.0/openxdata-mobile-model-1.0.jar</element>
-							</verifyClasspath>
-							
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

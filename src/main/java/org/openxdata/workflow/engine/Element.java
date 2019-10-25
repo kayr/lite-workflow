@@ -5,7 +5,10 @@ import org.openxdata.workflow.engine.persistent.PersistentHelper;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author kay
@@ -16,12 +19,17 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
     private List<Mapping> mappings = new ArrayList<>(0);
     private Net rootNet;
     private String id;
+    private Integer idNo;
 
     public Variable setValue(String varName, String value) {
         Variable variable = getVariable(varName);
         variable.setValue(value);
         return variable;
 
+    }
+
+    public Integer getIdNo() {
+        return idNo;
     }
 
     public String getValue(String variableId) {
@@ -151,8 +159,11 @@ public class Element extends org.openxdata.workflow.engine.persistent.AbstractRe
 
     public void setRootNet(Net rootNet) {
         this.rootNet = rootNet;
-        for (Mapping mapping : mappings) {
-            mapping.setRootNet(rootNet);
+        if (rootNet != null) {
+            this.idNo = rootNet.nextId();
+            for (Mapping mapping : mappings) {
+                mapping.setRootNet(rootNet);
+            }
         }
     }
 

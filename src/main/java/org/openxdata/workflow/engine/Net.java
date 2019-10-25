@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -17,22 +18,24 @@ public class Net extends Element {
 	private Map<String, String> extendAttributes = new HashMap<>();
 	private Task.STATE status = Task.STATE.DISABLED;
 
-	private Task startTask = new Task("START", "__start__");
-	private Task endTask = new Task("END", "__end__");
+	private Task startTask;
+	private Task endTask;
+
+	private AtomicInteger igGen = new AtomicInteger();
+
+	public int nextId() {
+		return igGen.incrementAndGet();
+	}
 
 	public Net() {
-		startTask.setRootNet(this);
-		endTask.setRootNet(this);
-		addTask(startTask);
-		addTask(endTask);
 	}
 
 	public List<Flow> getOutFlows() {
-		return startTask.getOutFlows();
+		return getStartTask().getOutFlows();
 	}
 
 	public Flow addFlow() {
-		return startTask.addOutFlow();
+		return getStartTask().addOutFlow();
 	}
 
 	public List<Task> getCurrentEnabledTasks() {
@@ -79,9 +82,9 @@ public class Net extends Element {
 			netTask.getVariable(varId).setValue(varValue);
 		}
 		netTask.processOutputMappings();
-		netTask.setStatus(Task.STATE.DISABLED);
+		netTask.setStatus(Task.STATE.COMPLETE);
 
-		if(task.canMoveForward()) {
+		if (netTask.canMoveForward()) {
 			enableNextTasks(netTask);
 		}
 		return netTask;
@@ -135,7 +138,6 @@ public class Net extends Element {
 
 	@Override
 	public String toString() {
-		int i = 1;
 		StringBuilder buff = new StringBuilder();
 		buff.append("   Net: ").append(getId()).append("\n");
 
@@ -145,7 +147,7 @@ public class Net extends Element {
 
 		while (!dq.isEmpty()) {
 			Flow curr = dq.poll();
-			buff.append(i++).append(": ").append(curr.toString()).append("\n");
+			buff.append(curr.getPreviousElement().getIdNo()).append(": ").append(curr.toString()).append("\n");
 
 			Task nextElement = curr.getNextElement();
 			List<Flow> outFlows = nextElement.getOutFlows();
@@ -153,7 +155,7 @@ public class Net extends Element {
 			if(visited.contains(nextElement)) continue;
 
 			if (outFlows.isEmpty() ) {
-				buff.append(i++).append(": ").append(nextElement.toString()).append("\n");
+				buff.append(curr.getNextElement().getIdNo()).append(": ").append(nextElement.toString()).append("\n");
 			} else {
 				dq.addAll(outFlows);
 			}
@@ -198,6 +200,9 @@ public class Net extends Element {
 		status = Task.STATE.valueOf(dis.readUTF());
 		extendAttributes = PersistentHelper.readMap(dis);
 
+		startTask = getTask(getStartTask().getId());
+		endTask = getTask(getEndTask().getId());
+
 		for (Flow flow : startTask.getOutFlows()) {
 			flow.setRootNet(this);
 		}
@@ -206,15 +211,24 @@ public class Net extends Element {
 			task.setRootNet(this);
 		}
 
-		startTask = getTask(startTask.getId());
-		endTask = getTask(endTask.getId());
+
 	}
 
 	public Task getStartTask() {
+
+		if (startTask == null) {
+			startTask = new Task("START", "__start__");
+			startTask.setRootNet(this);
+		}
 		return startTask;
+
 	}
 
 	public Task getEndTask() {
+		if (endTask == null) {
+			endTask = new Task("END", "__end__");
+			endTask.setRootNet(this);
+		}
 		return endTask;
 	}
 }

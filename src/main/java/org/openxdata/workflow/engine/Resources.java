@@ -19,12 +19,12 @@ public class Resources {
                 withParameter("name", FLOW.OUTPUT).
                         withParameter("sex", FLOW.OUTPUT);
 
-		Task isfather = (Task) enterdetails.addOutFlow().withEqualCondition("sex", "m").
+		Task isfather = (Task) enterdetails.withSplitType(Junction.TYPE.OR).addOutFlow().withEqualCondition("sex", "m").
 			forFlowingIntoNewTask("IsFather", "isfather").
                                                    withParameter("name", FLOW.INPUT).
                                                    withParameter("is_father", FLOW.OUTPUT);
 
-		Task ispregnant = (Task) enterdetails.addOutFlow().withEqualCondition("sex", "f").
+		Task ispregnant = (Task) enterdetails.withSplitType(Junction.TYPE.OR).addOutFlow().withEqualCondition("sex", "f").
 			forFlowingIntoNewTask("IsPregnant", "ispregnant").
                                                      withParameter("name", FLOW.INPUT).
                                                      withParameter("is_pregnant", FLOW.OUTPUT);
@@ -80,7 +80,7 @@ public class Resources {
                                                      withParameter("Age", FLOW.INPUT).
                                                      withParameter("Pregnancy", FLOW.OUTPUT);
 
-		Task childInfo = (Task) maternalInfo.addOutFlow().
+		Task childInfo = (Task) maternalInfo.withSplitType(Junction.TYPE.OR).addOutFlow().
 				withEqualCondition("Pregnancy", "true").
 			forFlowingIntoNewTask("Child Info", "Child_Info_7").
                                                     withParameter("Name", FLOW.INPUT).
@@ -99,7 +99,7 @@ public class Resources {
 
 		Task finish = updateRegister.addOutFlow().
 			forFlowingIntoNewTask("Finish", "finish").
-			havingJoinType(Junction.TYPE.AND);
+											withJoinType(Junction.TYPE.AND);
 
 		finish.addFlowToEnd();
 
@@ -123,7 +123,7 @@ public class Resources {
 
 		Task newPregnancy = (Task) net.addFlow().
 			forFlowingIntoNewTask("New Pregnancy", "New_Pregancy_10").
-			havingSplitType(Junction.TYPE.XOR).
+											  withSplitType(Junction.TYPE.XOR).
                                               withParameter("VillageName", FLOW.INPUT).
                                               withParameter("VillageLocation", FLOW.INPUT).
                                               withParameter("VillageCode", FLOW.INPUT).
@@ -138,7 +138,7 @@ public class Resources {
 		Task registerPregnancy = (Task) newPregnancy.addOutFlow().
 				withEqualCondition("newpregnancy", "Yes").
 			forFlowingIntoNewTask("Pregnancy Register", "Pregnancy_Registration_4").
-			havingJoinType(Junction.TYPE.OR).
+															withJoinType(Junction.TYPE.OR).
                                                             withParameter("VillageName", FLOW.INPUT).
                                                             withParameter("VillageLocation", FLOW.INPUT).
                                                             withParameter("VillageCode", FLOW.INPUT).
@@ -151,7 +151,7 @@ public class Resources {
 		Task pregnancyOutcome = (Task) newPregnancy.addOutFlow().
 				withEqualCondition("AnyPreviousBirth", "Yes").
 			forFlowingIntoNewTask("Pregancy Birth Outcome", "Pregnancy_Birth_Outcome_5").
-			havingJoinType(Junction.TYPE.OR).
+														   withJoinType(Junction.TYPE.OR).
                                                            withParameter("VillageName", FLOW.INPUT).
                                                            withParameter("VillageLocation", FLOW.INPUT).
                                                            withParameter("VillageCode", FLOW.INPUT).
@@ -165,7 +165,7 @@ public class Resources {
 		net.setValue("WomanPregnant", "No");
 
 		Task finTask = registerPregnancy.addOutFlow().forFlowingIntoNewTask("Finish", "finish").
-			havingJoinType(Junction.TYPE.AND);
+				withJoinType(Junction.TYPE.AND);
 		newPregnancy.addOutFlow().forFlowingIntoTask(finTask);
 		pregnancyOutcome.addOutFlow().forFlowingIntoTask(finTask);
 		return net;

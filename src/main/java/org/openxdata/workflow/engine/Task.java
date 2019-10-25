@@ -46,9 +46,6 @@ public class Task extends Element {
 		return split.isXOR();
 	}
 
-	public boolean isDirectSplit() {
-		return split.isDirect();
-	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -95,12 +92,13 @@ public class Task extends Element {
 		return flow;
 	}
 
-	public Task havingJoinType(Junction.TYPE type) {
+
+	public Task withJoinType(Junction.TYPE type) {
 		join.setType(type);
 		return this;
 	}
 
-	public Task havingSplitType(Junction.TYPE type) {
+	public Task withSplitType(Junction.TYPE type) {
 		split.setType(type);
 		return this;
 	}
@@ -116,9 +114,9 @@ public class Task extends Element {
 	@Override
 	public String toString() {
 		if (split.getFlows().isEmpty()) {
-			return "(:" + getId() + ")";
+			return "(" + getIdNo() + ":" + getId() + ")";
 		}
-		return split.toString();
+		return getIdNo() + ":" + split.toString();
 	}
 
 	public List<Task> getNextTasksInExec() {

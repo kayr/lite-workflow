@@ -85,9 +85,15 @@ public class Flow implements Persistent {
 	}
 
 	public Flow withEqualCondition(String taskVariable, String value) {
-		condition = new Condition(taskVariable, value, previousTaskName);
+		if(parentJunction instanceof Split && parentJunction.isAND()){
+		    throw new IllegalStateException("cannot have a condition on an AND split");
+        }
+
+	    condition = new Condition(taskVariable, value, previousTaskName);
 		condition.setRootNet(rootNet);
 		condition.setTaskName(previousTaskName);
+
+
 		return this;
 	}
 

@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.openxdata.workflow.engine.StreamUtil.copyNet;
 
@@ -78,6 +79,8 @@ public class NetTest extends TestCase {
 	public void testWorkFlowFlowsSmoothly() {
 		//Start the workflow
 		instance.start();
+
+		System.out.println(instance);
 
 
 		//** ====================== Task 1  **//
@@ -363,23 +366,28 @@ public class NetTest extends TestCase {
 	}
 
 	private void completeTask(Task enabledTask) {
+		instance = completeTask(enabledTask, instance);
+	}
+
+	private Net completeTask(Task enabledTask, Net instance) {
 		try {
 			instance = copyNet(instance);
-			System.out.print("Completing task: " + enabledTask);
+			System.out.print("Completing task: " + enabledTask.getId());
 			instance.complete(enabledTask);
 			instance = copyNet(instance);
-			System.out.print("\n  -> Next tasks: " + instance.getCurrentEnabledTasks());
+			System.out.print("\n  -> Next tasks: " + instance.getCurrentEnabledTasks().stream().map(Element::getId).collect(Collectors.joining(",", "[", "]")));
 		} catch (Exception ex) {
 			throw new RuntimeException("Unable to copy net: " + ex, ex);
 		}finally {
 			System.out.println();
 		}
+		return instance;
 	}
 
 	public void testNetDoesNotEndPrematurely() {
 		instance = Resources.getNetWithAnd1();
 
-		instance.getTask("finish").havingJoinType(Junction.TYPE.OR);
+		instance.getTask("finish").withJoinType(Junction.TYPE.OR);
 		instance.setValue("Name", "tonny");
 		instance.setValue("village", "Kiwatule");
 		instance.setValue("householdID", "HID205");
@@ -429,23 +437,26 @@ public class NetTest extends TestCase {
 		checkVariable(instance, "educationlevel", "s6");
 		//**  Completed Task 2**//
 
+		//***======================== child info should be enabled
+		Task child_info_7 = instance.getTask("Child_Info_7");
+		currentEnabledTasks = instance.getCurrentEnabledTasks();
+		assertEquals(1, currentEnabledTasks.size());
+		assertTrue("finish task not found in list", currentEnabledTasks.contains(child_info_7));
+		child_info_7.setValue("dateofbirth", "1986-Nov");
+		completeTask(child_info_7);
+
 
 
 		//**========================= Task 3 **//
 		currentEnabledTasks = instance.getCurrentEnabledTasks();
-		assertEquals(2, currentEnabledTasks.size());
-
+		assertEquals(1, currentEnabledTasks.size());
 		Task task = instance.getTask("finish");
 		assertTrue("finish task not found in list", currentEnabledTasks.contains(task));
 		completeTask(task);
-		assertFalse("Net Ended Prematurely", instance.isComplete());
+		assertTrue("Net Ended Prematurely", instance.isComplete());
 
 		currentEnabledTasks = instance.getCurrentEnabledTasks();
-		assertEquals(1, currentEnabledTasks.size());
-		task = instance.getTask("Child_Info_7");
-		assertTrue("finish task not found in list", currentEnabledTasks.contains(task));
-		task.setValue("dateofbirth", "1986-Nov");
-		completeTask(task);
+		assertEquals(0, currentEnabledTasks.size());
 
 		checkVariable(instance, "dateofbirth", "1986-Nov");
 		//** Complete Task 3 **//
@@ -463,6 +474,9 @@ public class NetTest extends TestCase {
 
 	public void testNetCompletesWhenPregnancyIsFalse() throws IllegalAccessException, InstantiationException, IOException {
 		Net net = Resources.getNetWithAnd1();
+
+		net.getTask("finish").withJoinType(Junction.TYPE.OR);
+		System.out.println(net);
 
 		net.setValue("Name", "tonny");
 		net.setValue("village", "Kiwatule");
@@ -508,8 +522,9 @@ public class NetTest extends TestCase {
 
 		for (int i = 0; i < tasks.size(); i++) {
 			Task task = tasks.get(i);
+			System.out.print("Completing task: " + task.getId());
 			task.getRootNet().complete(task);
-
+			System.out.println("\n  -> Next tasks: " + task.getRootNet().getCurrentEnabledTasks().stream().map(Element::getId).collect(Collectors.joining(",", "[", "]")));
 		}
 
 	}

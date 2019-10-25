@@ -22,12 +22,17 @@ public abstract class Junction implements Persistent {
 	}
 
 	public enum TYPE {
-		XOR, FORK, AND, OR
+		XOR,
+		AND,
+		/**
+		 * For splits
+		 */
+		OR
 	}
 
 	private List<Flow> flows = new ArrayList<>(0);
 	private Net rootNet;
-	private TYPE type = TYPE.FORK;
+	private TYPE type = TYPE.AND;
 
 	public Junction() {
 	}
@@ -40,9 +45,6 @@ public abstract class Junction implements Persistent {
 		this.type = type;
 	}
 
-	public boolean isDirect() {
-		return TYPE.FORK == type;
-	}
 
 	public boolean isXOR() {
 		return TYPE.XOR == type;

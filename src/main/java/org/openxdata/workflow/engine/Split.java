@@ -1,7 +1,8 @@
 package org.openxdata.workflow.engine;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -10,31 +11,24 @@ import java.util.List;
 public class Split extends Junction {
 
 	public List<Task> getTasksInExec() {
-		if (isAND()) {
-			return getAllNextTasks();
+		switch (getType()) {
+			case AND:
+				return getFlows().stream()
+								 .map(Flow::getNextElement)
+								 .collect(Collectors.toList());
+			case XOR:
+				return getFlows().stream()
+								 .filter(Flow::isFlowAllowed).findFirst()
+								 .map(Flow::getNextElement)
+								 .map(Collections::singletonList)
+								 .orElse(Collections.emptyList());
+			case OR:
+				return getFlows().stream()
+								 .filter(Flow::isFlowAllowed)
+								 .map(Flow::getNextElement)
+								 .collect(Collectors.toList());
+			default:
+				throw new IllegalStateException("Unsupported split type: " + getType().name());
 		}
-		List<Flow> outFlows = getFlows();
-		List<Task> tasks = new ArrayList<>(0);
-		for (Flow flow : outFlows) {
-			if (flow.isFlowAllowed()) {
-				tasks.add(flow.getNextElement());
-				if (isXOR()) {
-					//TODO Add support for for XOR splits.
-					//The tasks in the XOR split are also supposed to be disabled
-					break;
-				}
-			} else {
-				flow.getNextElement().setStatus(Task.STATE.COMPLETE);
-			}
-		}
-
-		if (isXOR()) {//TODO Make tests for this
-			for (Flow flow : outFlows) {
-				if (!tasks.contains(flow.getNextElement())) {
-					flow.getNextElement().setStatus(Task.STATE.COMPLETE);
-				}
-			}
-		}
-		return tasks;
 	}
 }

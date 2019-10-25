@@ -8,16 +8,23 @@ import java.util.List;
  */
 public class Join extends Junction {
 
-	boolean areTasksComplete() {
-		//TODO:Support for different types of join ie. XOR, OR, AND
-		if (isAND()) {
-			List<Flow> inFlows = getFlows();
-			for (Flow flow : inFlows) {
-				if (!flow.getPreviousElement().isCompleteOrDisabled()) {
-					return false;
-				}
-			}
-		}
-		return true;
+	public Join() {
+		setType(TYPE.OR);
 	}
+
+	boolean areTasksComplete() {
+		final List<Flow> flows = getFlows();
+		switch (getType()) {
+			case AND:
+				return flows.stream().allMatch(f -> f.getPreviousElement().isComplete());
+			case OR:
+				return flows.stream().allMatch(f -> f.getPreviousElement().isCompleteOrDisabled());
+			case XOR:
+				return flows.stream().anyMatch(f -> f.getPreviousElement().isComplete());
+			default:
+				throw new IllegalStateException(getType().name() + " Joins not supported");
+		}
+	}
+
+
 }

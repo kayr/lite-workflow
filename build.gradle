@@ -7,7 +7,7 @@ apply plugin: 'maven'
 
 group = 'com.omnitech'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 
 
