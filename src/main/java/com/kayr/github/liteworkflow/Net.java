@@ -64,7 +64,7 @@ public class Net extends Element {
 		status = Task.STATE.ENABLED;
 		for (Flow flow : startTask.getOutFlows()) {
 			Task task = flow.getNextElement();
-			enableTask(task);
+			mayBeEnableTask(task);
 		}
 	}
 
@@ -82,9 +82,8 @@ public class Net extends Element {
 		netTask.processOutputMappings();
 		netTask.setStatus(Task.STATE.COMPLETE);
 
-		if (netTask.canMoveForward()) {
-			enableNextTasks(netTask);
-		}
+		mayBeEnableNextTasks(netTask);
+
 		return netTask;
 	}
 
@@ -92,7 +91,7 @@ public class Net extends Element {
 		return task == endTask;
 	}
 
-	protected void enableTask(Task nextTask) {
+	protected void mayBeEnableTask(Task nextTask) {
 		if (nextTask.getStatus() == Task.STATE.DISABLED && nextTask.areInFlowsComplete()) {
 			//TODO: Somehow add support for backward flows
 			nextTask.setStatus(Task.STATE.ENABLED);
@@ -101,7 +100,12 @@ public class Net extends Element {
 
 	}
 
-	protected void enableNextTasks(Task submitTask) {
+	/**
+	 * Will enable next tasks if the next taks join condition/or type allows it.
+	 * if a join if of type and and all the previouse tasks of that specific task are not
+	 * complete, then the task will not enabled
+	 */
+	protected void mayBeEnableNextTasks(Task submitTask) {
 		List<Task> nextTasks = submitTask.getNextTasksInExec();
 		if (nextTasks.isEmpty()) {
 			status = Task.STATE.COMPLETE;
@@ -113,7 +117,7 @@ public class Net extends Element {
 				status = Task.STATE.COMPLETE;
 				break;
 			} else {
-				enableTask(nextTask);
+				mayBeEnableTask(nextTask);
 			}
 		}
 	}

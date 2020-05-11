@@ -98,6 +98,10 @@ public class Task extends Element {
 		return this;
 	}
 
+	public Join getJoin() {
+		return join;
+	}
+
 	public Task withSplitType(Junction.TYPE type) {
 		split.setType(type);
 		return this;
@@ -114,7 +118,7 @@ public class Task extends Element {
 	@Override
 	public String toString() {
 		if (split.getFlows().isEmpty()) {
-			return "(" + getIdNo() + ":" + getId() + ")";
+			return "(" + getIdNo() + ":["+ join.getType()+"]" + getId() + ")";
 		}
 		return getIdNo() + ":" + split.toString();
 	}
@@ -164,10 +168,6 @@ public class Task extends Element {
 
 	boolean isCompleteOrDisabled() {
 		return EnumSet.of(STATE.COMPLETE, STATE.DISABLED).contains(status);
-	}
-
-	public boolean canMoveForward() {
-		return join.areTasksComplete();
 	}
 
 }

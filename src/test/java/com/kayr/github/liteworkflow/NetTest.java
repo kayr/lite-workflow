@@ -363,6 +363,105 @@ public class NetTest extends TestCase {
 
 	}
 
+	public void testPeterNetFlowsSmoothlyPregnancyTrueAndRegisterUpdatedLater() throws IOException, IllegalAccessException, InstantiationException {
+		instance = Resources.getNetWithAnd1();
+
+		instance.setValue("Name", "tonny");
+		instance.setValue("village", "Kiwatule");
+		instance.setValue("householdID", "HID205");
+		instance.setValue("Age", "25");
+		//Start the workflow
+		instance.start();
+
+		System.out.println(Cypher.generate(instance));
+
+		System.out.println(instance);
+
+
+		//** ====================== Task 1  **//
+		List<Task> currentEnabledTasks = instance.getCurrentEnabledTasks();
+		assertEquals(currentEnabledTasks.size(), 1);
+
+		Task enabledTask = currentEnabledTasks.get(0);
+		assertEquals("Reproductive_info_4", enabledTask.getId());
+		checkCorrectVariableTableSize(enabledTask, 5);
+
+		enabledTask.setValue("familyplanningmethod", "injectaplan");
+
+		completeTask(enabledTask);
+		assertTrue(instance.isStarted());
+		assertFalse(instance.isComplete());
+		checkVariable(instance, "familyplanningmethod", "injectaplan");
+
+		//** Compled Task 1 **//
+
+
+		//** ======================== Task2 **//
+
+		Task updateRegisterTask = null;
+
+		currentEnabledTasks = instance.getCurrentEnabledTasks();
+		assertEquals(2, currentEnabledTasks.size());
+
+		for (Task task : currentEnabledTasks) {
+			if (task.getId().equals("Maternal_Info_6")) {
+				task.setValue("Pregnancy", "true");
+				completeTask(task);
+			} else if (task.getId().equals("Update_Register_9")) {
+				task.setValue("educationlevel", "s6");
+				updateRegisterTask = task;
+			}
+		}
+
+		assertNotNull(updateRegisterTask);
+
+		assertTrue("Net Ended Prematurel", instance.isStarted());
+		assertFalse(instance.isComplete());
+		checkVariable(instance, "Pregnancy", "true");
+//		checkVariable(instance, "educationlevel", "s6");
+		//**  Completed Task 2**//
+
+
+		//**========================= Task 3 **//
+		currentEnabledTasks = instance.getCurrentEnabledTasks();
+		assertEquals(2, currentEnabledTasks.size());
+		Task Child_Info_7Task = instance.getTask("Child_Info_7");
+		assertTrue("Child_Info_7 task was not found", currentEnabledTasks.contains(Child_Info_7Task));
+		Child_Info_7Task.setValue("dateofbirth", "1986-Nov");
+		completeTask(Child_Info_7Task);
+		checkVariable(instance, "dateofbirth", "1986-Nov");
+		//** Complete Task 3 **//
+
+
+		//**========================= Task 4 **//
+		//check that finish is not activated since
+
+		currentEnabledTasks = instance.getCurrentEnabledTasks();
+		assertEquals(1, currentEnabledTasks.size());
+		updateRegisterTask = instance.getTask(updateRegisterTask.getId());
+		assertTrue("register info should be the only one enabled", currentEnabledTasks.contains(updateRegisterTask));
+		completeTask(updateRegisterTask);
+
+
+		//**========================= Task 4 **//
+		currentEnabledTasks = instance.getCurrentEnabledTasks();
+		assertEquals(1, currentEnabledTasks.size());
+		Task finishTask = instance.getTask("finish");
+		assertTrue("finish task was not found", currentEnabledTasks.contains(finishTask));
+		completeTask(finishTask);
+		//** Complete Task 4 **//
+
+		//************ Check instance is complete ****/
+		currentEnabledTasks = instance.getCurrentEnabledTasks();
+
+		assertTrue("No Tasks Are Expected to be enabled", currentEnabledTasks.isEmpty());
+		assertTrue("Net is expected to be in completed state", instance.isComplete());
+		assertFalse(instance.isStarted());
+
+		//***********Complete//
+
+	}
+
 	private void completeTask(Task enabledTask) {
 		instance = completeTask(enabledTask, instance);
 	}

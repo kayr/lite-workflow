@@ -114,9 +114,9 @@ public class Flow implements Persistent {
 
 	public String toString(Junction.TYPE type) {
 		if (condition == null)
-			return String.format("(:%s)-[:%s]->(:%s)", previousTaskName, type.name(), nextTaskName);
+			return String.format("(:%s)-[:%s]->(:[%s]%s)", previousTaskName, type.name(),rootNet.getTask(nextTaskName).getJoin().getType(), nextTaskName);
 		else
-			return String.format("(:%s)-[:%s {c: %s}]->(:%s)", previousTaskName, type.name(), condition.toString(), nextTaskName);
+			return String.format("(:%s)-[:%s {c: %s}]->(:[%s]%s)", previousTaskName, type.name(), condition.toString(),rootNet.getTask(nextTaskName).getJoin().getType(), nextTaskName);
 
 
 	}
