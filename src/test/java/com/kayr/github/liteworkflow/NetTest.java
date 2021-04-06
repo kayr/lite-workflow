@@ -617,6 +617,105 @@ public class NetTest extends TestCase {
 		assertTrue("Net is expected to be complete", net.isComplete());
 	}
 
+	public void testNetWithCustomCondition() {
+		Net net = new Net();
+
+
+		net.setId("SampleNet");
+		Task enterdetails = new Task("EnterDetails", "enterdetails");
+		net.addFlow().forFlowingIntoTask(enterdetails).
+				withParameter("name", Variable.FLOW.OUTPUT).
+				withParameter("sex", Variable.FLOW.OUTPUT);
+
+		Task isfather = (Task) enterdetails
+				.withSplitType(Junction.TYPE.OR)
+				.addOutFlow()
+				.withCondition((root, task) -> root.getVariablesTable().get("sex").getValue().equals("m"))
+				.forFlowingIntoNewTask("IsFather", "isfather").
+						withParameter("name", Variable.FLOW.INPUT).
+						withParameter("is_father", Variable.FLOW.OUTPUT);
+
+		Task ispregnant = (Task) enterdetails
+				.withSplitType(Junction.TYPE.OR)
+				.addOutFlow()
+				.withEqualCondition("sex", "f")
+				.forFlowingIntoNewTask("IsPregnant", "ispregnant").
+						withParameter("name", Variable.FLOW.INPUT).
+						withParameter("is_pregnant", Variable.FLOW.OUTPUT);
+
+
+		isfather.addFlowToEnd();
+		ispregnant.addFlowToEnd();
+
+		net.start();
+
+		System.out.println(net.toString());
+
+		Task enabled1 = net.getCurrentEnabledTasks().get(0);
+
+		enabled1.setValue("sex", "m");
+
+		net.complete(enabled1);
+
+
+		List<Task> currentEnabledTasks = net.getCurrentEnabledTasks();
+		assertEquals(1, currentEnabledTasks.size());
+		Task enabled2 = currentEnabledTasks.get(0);
+		assertEquals("isfather", enabled2.getId());
+
+
+
+	}
+
+
+	public void testNetWithCustomCondition2() {
+		Net net = new Net();
+
+
+		net.setId("SampleNet");
+		Task enterdetails = new Task("EnterDetails", "enterdetails");
+		net.addFlow().forFlowingIntoTask(enterdetails).
+				withParameter("name", Variable.FLOW.OUTPUT).
+				withParameter("sex", Variable.FLOW.OUTPUT);
+
+		Task isfather = (Task) enterdetails
+				.withSplitType(Junction.TYPE.OR)
+				.addOutFlow()
+				.withCondition((root, task) -> root.getVariablesTable().get("sex").getValue().equals("m"))
+				.forFlowingIntoNewTask("IsFather", "isfather").
+						withParameter("name", Variable.FLOW.INPUT).
+						withParameter("is_father", Variable.FLOW.OUTPUT);
+
+		Task ispregnant = (Task) enterdetails
+				.withSplitType(Junction.TYPE.OR)
+				.addOutFlow()
+				.withEqualCondition("sex", "f")
+				.forFlowingIntoNewTask("IsPregnant", "ispregnant").
+						withParameter("name", Variable.FLOW.INPUT).
+						withParameter("is_pregnant", Variable.FLOW.OUTPUT);
+
+
+		isfather.addFlowToEnd();
+		ispregnant.addFlowToEnd();
+
+		net.start();
+
+		System.out.println(net.toString());
+
+		Task enabled1 = net.getCurrentEnabledTasks().get(0);
+
+		enabled1.setValue("sex", "f");
+
+		net.complete(enabled1);
+
+		List<Task> currentEnabledTasks = net.getCurrentEnabledTasks();
+		assertEquals(1, currentEnabledTasks.size());
+		Task enabled2 = currentEnabledTasks.get(0);
+		assertEquals("ispregnant", enabled2.getId());
+
+
+
+	}
 	public void completeTasks(List<Task> tasks) {
 
 		for (int i = 0; i < tasks.size(); i++) {

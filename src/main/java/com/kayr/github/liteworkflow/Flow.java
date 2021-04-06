@@ -43,7 +43,7 @@ public class Flow implements Persistent {
 		return condition;
 	}
 
-	public Flow setCondition(ICondition condition) {
+	public Flow withCondition(ICondition condition) {
 		this.condition = condition;
 		return this;
 	}
