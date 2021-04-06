@@ -6,9 +6,9 @@ import com.kayr.github.liteworkflow.persistent.PersistentHelper;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
- *
  * @author kay
  */
 public class Flow implements Persistent {
@@ -18,7 +18,7 @@ public class Flow implements Persistent {
 	private Task previousElement;
 	private String nextTaskName;
 	private String previousTaskName;
-	private Condition condition;
+	private ICondition condition;
 	private Junction parentJunction;
 
 	public Flow() {
@@ -33,18 +33,19 @@ public class Flow implements Persistent {
 		setPreviousElement(previousElement);
 	}
 
-	public Flow(String nextTaskName, String previousTaskName, Condition condition) {
+	public Flow(String nextTaskName, String previousTaskName, SimpleEqualCondition condition) {
 		this.nextTaskName = nextTaskName;
 		this.previousTaskName = previousTaskName;
 		this.condition = condition;
 	}
 
-	public Condition getCondition() {
+	public ICondition getCondition() {
 		return condition;
 	}
 
-	public void setCondition(Condition condition) {
+	public Flow setCondition(ICondition condition) {
 		this.condition = condition;
+		return this;
 	}
 
 	public Task getNextElement() {
@@ -85,22 +86,17 @@ public class Flow implements Persistent {
 	}
 
 	public Flow withEqualCondition(String taskVariable, String value) {
-		if(parentJunction instanceof Split && parentJunction.isAND()){
-		    throw new IllegalStateException("cannot have a condition on an AND split");
-        }
+		if (parentJunction instanceof Split && parentJunction.isAND()) {
+			throw new IllegalStateException("cannot have a condition on an AND split");
+		}
 
-	    condition = new Condition(taskVariable, value, previousTaskName);
-		condition.setRootNet(rootNet);
-		condition.setTaskName(previousTaskName);
+		condition = new SimpleEqualCondition(taskVariable, value, previousTaskName);
 
 
 		return this;
 	}
 
 	void setRootNet(Net rootNet) {
-		if (condition != null) {
-			condition.setRootNet(rootNet);
-		}
 		this.rootNet = rootNet;
 	}
 
@@ -135,7 +131,7 @@ public class Flow implements Persistent {
 		if (condition == null) {
 			return true;
 		}
-		return condition.isAllowed();
+		return condition.isAllowed(rootNet, rootNet.getTask(previousTaskName));
 	}
 
 	public void write(DataOutputStream dos) throws IOException {
@@ -143,9 +139,12 @@ public class Flow implements Persistent {
 		PersistentHelper.writeUTF(dos, previousTaskName);
 		if (condition == null) {
 			dos.writeByte(0);
-		} else {
+		} else if (condition instanceof Persistent) {
 			dos.writeByte(1);
-			condition.write(dos);
+			dos.writeUTF(condition.getClass().getName());
+			((Persistent) condition).write(dos);
+		} else {
+			throw new UnsupportedEncodingException("cannot write condition " + condition);
 		}
 
 	}
@@ -155,8 +154,15 @@ public class Flow implements Persistent {
 		previousTaskName = PersistentHelper.readUTF(dis);
 		byte cndByte = dis.readByte();
 		if (cndByte == 1) {
-			condition = new Condition();
-			condition.read(dis);
+			String s = dis.readUTF();
+			Persistent o = null;
+			try {
+				o = (Persistent) Class.forName(s).newInstance();
+			} catch (ClassNotFoundException e) {
+				throw new InstantiationException("failed to instantiate class: " + s);
+			}
+			o.read(dis);
+			condition = (ICondition) o;
 		}
 	}
 

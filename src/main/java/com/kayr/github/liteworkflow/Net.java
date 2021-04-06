@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Net extends Element {
 
+	public static final String START_TASK_ID = "__start__";
+	public static final String END_TASK_ID = "__end__";
 	private Map<String, Task> netTasks = new HashMap<>(0);
 	private Map<String, String> extendAttributes = new HashMap<>();
 	private Task.STATE status = Task.STATE.DISABLED;
@@ -202,12 +204,9 @@ public class Net extends Element {
 		status = Task.STATE.valueOf(dis.readUTF());
 		extendAttributes = PersistentHelper.readMap(dis);
 
-		startTask = getTask(getStartTask().getId());
-		endTask = getTask(getEndTask().getId());
+		startTask = getTask(START_TASK_ID);
+		endTask = getTask(END_TASK_ID);
 
-		for (Flow flow : startTask.getOutFlows()) {
-			flow.setRootNet(this);
-		}
 
 		for (Task task : netTasks.values()) {
 			task.setRootNet(this);
@@ -219,7 +218,7 @@ public class Net extends Element {
 	public Task getStartTask() {
 
 		if (startTask == null) {
-			startTask = new Task("START", "__start__");
+			startTask = new Task("START", START_TASK_ID);
 			startTask.setRootNet(this);
 		}
 		return startTask;
@@ -228,7 +227,7 @@ public class Net extends Element {
 
 	public Task getEndTask() {
 		if (endTask == null) {
-			endTask = new Task("END", "__end__");
+			endTask = new Task("END", END_TASK_ID);
 			endTask.setRootNet(this);
 		}
 		return endTask;

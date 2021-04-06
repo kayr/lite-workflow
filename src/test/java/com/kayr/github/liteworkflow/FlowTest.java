@@ -40,7 +40,7 @@ public class FlowTest extends TestCase {
 	}
 
 	public void testWriteAndReadWitCondn() throws Exception {
-		Condition cond = new Condition("varid", "expValue", "prevTaskName");
+		SimpleEqualCondition cond = new SimpleEqualCondition("varid", "expValue", "prevTaskName");
 		instance.setCondition(cond);
 
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();

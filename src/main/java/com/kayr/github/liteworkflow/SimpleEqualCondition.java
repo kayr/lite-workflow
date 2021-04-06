@@ -10,29 +10,19 @@ import java.io.IOException;
 /**
  * @author kay
  */
-public class Condition implements Persistent {
+public class SimpleEqualCondition implements ICondition, Persistent {
 
-    //TODO: Add support for verifying for task Variable too
-    private Net rootNet;
     private String expectedValue;
     private String variableId;
     private String previousTaskName;
 
-    public Condition() {
+    public SimpleEqualCondition() {
     }
 
-    public Condition(String variableId, String expectedValue, String previousTaskName) {
+    public SimpleEqualCondition(String variableId, String expectedValue, String previousTaskName) {
         this.expectedValue = expectedValue;
         this.variableId = variableId;
         this.previousTaskName = previousTaskName;
-    }
-
-    public void setRootNet(Net rootNet) {
-        this.rootNet = rootNet;
-    }
-
-    public Net getRootNet() {
-        return rootNet;
     }
 
     protected String getExpectedValue() {
@@ -45,19 +35,6 @@ public class Condition implements Persistent {
 
     public String getPreviousTaskName() {
         return previousTaskName;
-    }
-
-    public boolean isAllowed() {
-        String calctdNetValue = rootNet.getValue(variableId);
-        String expValue = getExpectedValue();
-        if (calctdNetValue == null && expValue == null) {
-            return true;
-        }
-        if (calctdNetValue == null || expValue == null) {
-            return false;
-        }
-
-        return calctdNetValue.equalsIgnoreCase(expValue);
     }
 
 
@@ -76,5 +53,19 @@ public class Condition implements Persistent {
         expectedValue = PersistentHelper.readUTF(dis);
         previousTaskName = PersistentHelper.readUTF(dis);
         variableId = PersistentHelper.readUTF(dis);
+    }
+
+    @Override
+    public boolean isAllowed(Net root, Task task) {
+        String calctdNetValue = root.getValue(variableId);
+        String expValue = getExpectedValue();
+        if (calctdNetValue == null && expValue == null) {
+            return true;
+        }
+        if (calctdNetValue == null || expValue == null) {
+            return false;
+        }
+
+        return calctdNetValue.equalsIgnoreCase(expValue);
     }
 }
